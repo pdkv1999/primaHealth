@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AP Screen</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans antialiased">
+  <div class="container mx-auto max-w-4xl p-8 mt-10">
+    <h1 class="text-3xl font-bold text-gray-800 text-center mb-8">Assistant Psychologist</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Case Details</h3>
+        <p class="text-gray-600 mb-2"><strong>PrimaHealth Reference Number:</strong> PH25-001</p>
+        <p class="text-gray-600 mb-2"><strong>Guardian1 Name:</strong> Jane Doe</p>
+        <p class="text-gray-600 mb-2"><strong>Patient Name:</strong> James Doe</p>
+        <p class="text-gray-600 mb-2"><strong>DOB:</strong> 04-06-1999</p>
+        <p class="text-gray-600 mb-2"><strong>Guardian1 Mobile Number:</strong> 0987654321</p>
+        <p class="text-gray-600 mb-2"><strong>Main School Name:</strong> Greenfield Primary</p>
+        <p class="text-gray-600 mb-4"><strong>Preferred Teacher Name:</strong> Mr. O'Brien</p>
+        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full">Complete SC Form</button>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Status (Data from real time)</h3>
+        <p class="text-gray-600 mb-2"><strong>SC Status:</strong> Booked</p>
+        <p class="text-gray-600 mb-2"><strong>G2 Consent Status:</strong> Requested</p>
+        <p class="text-gray-600 mb-2"><strong>CAMHS Status:</strong> Waiting List</p>
+        <p class="text-gray-600 mb-2"><strong>Block Progress:</strong> No</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-lg col-span-1 md:col-span-2">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Call Checklist</h3>
+        <div class="space-y-3">
+          <label class="flex items-center text-gray-600">
+            <input type="checkbox" class="mr-2">
+            GP Referral received?
+          </label>
+          <label class="flex items-center text-gray-600">
+            <input type="checkbox" class="mr-2">
+            Any previous reports?
+          </label>
+          <label class="flex items-center text-gray-600">
+            <input type="checkbox" class="mr-2">
+            Guardian1 Consent received?
+          </label>
+          <label class="flex items-center text-gray-600">
+            <input type="checkbox" class="mr-2">
+            Guardian2 consent received?
+          </label>
+          <label class="flex items-center text-gray-600">
+            <input type="checkbox" class="mr-2">
+            Emergency Contact Required (if Single Parent Household)
+          </label>
+          <label class="flex items-center text-gray-600">
+            <input type="checkbox" class="mr-2">
+            CAMHS discharge letter required?
+          </label>
+          <label class="flex items-center text-gray-600">
+            <input type="checkbox" class="mr-2">
+            Main School Name & Address, School Email, Preferred Teacher Name received?
+          </label>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-lg col-span-1 md:col-span-2">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Final Conclusion (This should be automatic based on the SC Form Output)</h3>
+        <p class="text-gray-600"><strong>Block:</strong> Yes / No</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
