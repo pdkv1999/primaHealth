@@ -13,10 +13,38 @@ def index():
 @app.route('/phase1')
 def phase1():
     return render_template('phase1.html')
+@app.route('/phase2')
+def phase2():
+    return render_template('phase2.html')
 
-@app.route('/ap_screen')
+@app.route('/phase1/ap_screen')
 def ap_screen():
-    return render_template('ap_screen.html')  # Make sure this HTML file exists in the templates folder
+    return render_template('ap_screen.html')
+
+@app.route('/phase1/cc_screen')
+def cc_screen():
+    return render_template('cc_screen.html')
+
+@app.route('/phase1/cm_screen')
+def cm_screen():
+    return render_template('cm_screen.html')
+
+@app.route('/phase2/stage1')
+def stage1():
+    return render_template('stage1.html')
+
+@app.route('/phase2/stage2')
+def stage2():
+    return render_template('stage2.html')
+
+@app.route('/phase2/stage3')
+def stage3():
+    return render_template('stage3.html')
+
+@app.route('/phase2/stage4')
+def stage4():
+    return render_template('stage4.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

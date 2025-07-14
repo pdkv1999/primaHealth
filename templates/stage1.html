@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intake Call Form - PH25</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        h2 {
+            color: #444;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="tel"],
+        input[type="time"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .radio-group, .checkbox-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .radio-group label, .checkbox-group label {
+            font-weight: normal;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        /* Horizontal layout for large screens */
+        @media (min-width: 768px) {
+            .form-section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            .form-group {
+                flex: 1 1 45%;
+                min-width: 300px;
+            }
+            .checkbox-group, .radio-group {
+                flex: 1 1 100%;
+            }
+            .full-width {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Intake Call Form - PH25</h1>
+        <form id="intakeForm">
+            <!-- Reference and Contact Information -->
+            <h2>Reference and Contact Information</h2>
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="refNumber">Reference Number (PH25 - )</label>
+                    <input type="text" id="refNumber" name="refNumber" placeholder="Enter Reference Number">
+                </div>
+                <div class="form-group">
+                    <label for="gpName">GP Name</label>
+                    <input type="text" id="gpName" name="gpName" placeholder="Enter GP Name">
+                </div>
+                <div class="form-group">
+                    <label for="gpAddress">GP Address</label>
+                    <textarea id="gpAddress" name="gpAddress" placeholder="Enter GP Address"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="ccTo">CC to</label>
+                    <select id="ccTo" name="ccTo">
+                        <option value="parents">Parents</option>
+                        <option value="parent">Parent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="clientName">Client/Patient Name</label>
+                    <input type="text" id="clientName" name="clientName" placeholder="Enter Client/Patient Name">
+                </div>
+                <div class="form-group">
+                    <label for="clientAddress">Client/Patient Home Address</label>
+                    <textarea id="clientAddress" name="clientAddress" placeholder="Enter Client/Patient Address"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob">
+                </div>
+                <div class="form-group">
+                    <label for="guardianName">Guardian/Mother Name</label>
+                    <input type="text" id="guardianName" name="guardianName" placeholder="Enter Guardian/Mother Name">
+                </div>
+                <div class="form-group">
+                    <label for="contactNumber">Contact Number</label>
+                    <input type="tel" id="contactNumber" name="contactNumber" placeholder="Enter Contact Number">
+                </div>
+                <div class="form-group">
+                    <label for="assessmentDate">Date of Assessment</label>
+                    <input type="date" id="assessmentDate" name="assessmentDate">
+                </div>
+                <div class="form-group">
+                    <label for="assessmentTime">Time of Assessment</label>
+                    <input type="time" id="assessmentTime" name="assessmentTime">
+                </div>
+                <div class="form-group">
+                    <label for="assessmentLocation">Location/Method of Assessment</label>
+                    <input type="text" id="assessmentLocation" name="assessmentLocation" placeholder="Enter Location/Method">
+                </div>
+                <div class="form-group">
+                    <label for="clinician">Clinician Delivering Assessment</label>
+                    <input type="text" id="clinician" name="clinician" placeholder="Enter Clinician Name">
+                </div>
+            </div>
+
+            <!-- Intro Notes -->
+            <h2>Intro Notes</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="introNotes">Any Relevant Intro Notes</label>
+                    <textarea id="introNotes" name="introNotes" placeholder="Enter any relevant intro notes"></textarea>
+                </div>
+            </div>
+
+            <!-- Present at Assessment -->
+            <h2>Present at Assessment</h2>
+            <div class="form-section">
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="present" value="both"> Both</label>
+                    <label><input type="checkbox" name="present" value="mother"> Mother</label>
+                    <label><input type="checkbox" name="present" value="father"> Father</label>
+                    <label><input type="checkbox" name="present" value="other"> Other</label>
+                    <input type="text" id="presentOther" name="presentOther" placeholder="Specify if Other" style="width: 200px;">
+                </div>
+            </div>
+
+            <!-- CC in Final Report -->
+            <h2>Others to CC in Final Report</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="ccReport">Others to CC</label>
+                    <textarea id="ccReport" name="ccReport" placeholder="Enter names to CC in final report"></textarea>
+                </div>
+            </div>
+
+            <!-- Client Details -->
+            <h2>Client Details</h2>
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="handedness">Handedness</label>
+                    <select id="handedness" name="handedness">
+                        <option value="">Select Handedness</option>
+                        <option value="right">Right</option>
+                        <option value="left">Left</option>
+                        <option value="ambidextrous">Ambidextrous</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="age">Year & Months</label>
+                    <input type="text" id="age" name="age" placeholder="e.g., 5 years 3 months">
+                </div>
+                <div class="form-group">
+                    <label for="schoolYear">Year in School</label>
+                    <input type="text" id="schoolYear" name="schoolYear" placeholder="Enter Year in School">
+                </div>
+                <div class="form-group">
+                    <label for="school">School</label>
+                    <input type="text" id="school" name="school" placeholder="Enter School Name">
+                </div>
+            </div>
+
+            <!-- Referral Background -->
+            <h2>Referral Background</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="referralBackground">Details</label>
+                    <textarea id="referralBackground" name="referralBackground" placeholder="Enter referral background details"></textarea>
+                </div>
+            </div>
+
+            <!-- Medical History -->
+            <h2>Medical History</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="medicalHistory">Details</label>
+                    <textarea id="medicalHistory" name="medicalHistory" placeholder="Enter medical history details"></textarea>
+                </div>
+            </div>
+
+            <!-- Medications / Supplements -->
+            <h2>Medications / Supplements</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="medications">Details</label>
+                    <textarea id="medications" name="medications" placeholder="Enter medications/supplements details"></textarea>
+                </div>
+            </div>
+
+            <!-- Past Surgical/Procedural History -->
+            <h2>Past Surgical/Procedural History</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="surgicalHistory">Details</label>
+                    <textarea id="surgicalHistory" name="surgicalHistory" placeholder="Enter surgical/procedural history"></textarea>
+                </div>
+            </div>
+
+            <!-- Drug Allergies/Intolerances -->
+            <h2>Drug Allergies/Intolerances</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="allergies">Details</label>
+                    <textarea id="allergies" name="allergies" placeholder="Enter drug allergies/intolerances"></textarea>
+                </div>
+            </div>
+
+            <!-- Forensic History -->
+            <h2>Forensic History</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="forensicHistory">Details</label>
+                    <textarea id="forensicHistory" name="forensicHistory" placeholder="Enter forensic history"></textarea>
+                </div>
+            </div>
+
+            <!-- Substance History -->
+            <h2>Substance History</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="substanceHistory">Details</label>
+                    <textarea id="substanceHistory" name="substanceHistory" placeholder="Enter substance history"></textarea>
+                </div>
+            </div>
+
+            <!-- Family History -->
+            <h2>Family History</h2>
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="householdComposition">Household Composition</label>
+                    <textarea id="householdComposition" name="householdComposition" placeholder="Enter household composition"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="familyMedicalHistory">Relevant Family History of Medical Issues</label>
+                    <textarea id="familyMedicalHistory" name="familyMedicalHistory" placeholder="Enter family medical history"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="familyMentalHealth">Relevant Family History of Mental Health Difficulties</label>
+                    <textarea id="familyMentalHealth" name="familyMentalHealth" placeholder="Enter family mental health history"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="familyLearningDifficulties">Relevant Family History of Learning Difficulties</label>
+                    <textarea id="familyLearningDifficulties" name="familyLearningDifficulties" placeholder="Enter family learning difficulties"></textarea>
+                </div>
+            </div>
+
+            <!-- Pregnancy and Developmental Milestones -->
+            <h2>Pregnancy and Developmental Milestones</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="developmentalMilestones">Developmental Milestones</label>
+                    <textarea id="developmentalMilestones" name="developmentalMilestones" placeholder sn="Enter developmental milestones"></textarea>
+                </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <h2>Additional Notes</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label for="additionalNotes">Any Additional Notes</label>
+                    <textarea id="additionalNotes" name="additionalNotes" placeholder="Enter additional notes"></textarea>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <h2>Next Steps</h2>
+            <div class="form-section">
+                <div class="form-group full-width">
+                    <label>Additional Assessments/Investigations to Consider</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="assessments" value="ot"> OT</label>
+                        <textarea name="otDetails" placeholder="Details if OT selected" style="width: 200px;"></textarea>
+                    </div>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="assessments" value="slt"> SLT</label>
+                        <textarea name="sltDetails" placeholder="Details if SLT selected" style="width: 200px;"></textarea>
+                    </div>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="assessments" value="cognitive"> Cognitive</label>
+                        <textarea name="cognitiveDetails" placeholder="Details if Cognitive selected" style="width: 200px;"></textarea>
+                    </div>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="assessments" value="other"> Other</label>
+                        <textarea name="otherAssessmentDetails" placeholder="Details if Other selected" style="width: 200px;"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nextSessionType">Next Session Type</label>
+                    <input type="text" id="nextSessionType" name="nextSessionType" placeholder="Enter next session type">
+                </div>
+                <div class="form-group">
+                    <label for="otherDetails">Other Details</label>
+                    <textarea id="otherDetails" name="otherDetails" placeholder="Enter other details"></textarea>
+                </div>
+            </div>
+
+            <button type="submit">Submit Form</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('intakeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted successfully!');
+            // Add form submission logic here (e.g., send data to server)
+        });
+    </script>
+</body>
+</html>
