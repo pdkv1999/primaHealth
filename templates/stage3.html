@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Stage 3 - Final Assessment (PH25)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h2 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+            grid-column: 1 / -1; /* Span across both columns */
+        }
+        h3 {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            gap: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9em;
+        }
+        textarea, input[type="text"], input[type="date"], input[type="time"] {
+            width: 100%;
+            padding: 6px;
+            margin-top: 4px;
+            box-sizing: border-box;
+            font-size: 0.9em;
+        }
+        .checkbox-group {
+            margin-top: 10px;
+        }
+        .checkbox-group label {
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr; /* Stack columns on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>Stage 3: Final Assessment</h2>
+    <div class="container">
+        <!-- Left Column -->
+        <div class="column">
+            <div class="section">
+                <label>Our Ref: PH25 - <input type="text" name="ref_number"></label>
+                <label>GP Name: <input type="text" name="gp_name"></label>
+                <label>GP Address: <textarea name="gp_address"></textarea></label>
+                <label>cc: Parent(s)/Guardian(s) of <input type="text" name="client_name_cc"></label>
+                <label>Additional Doctors (if relevant): <textarea name="additional_doctors"></textarea></label>
+                <label>Client Name: <input type="text" name="client_name"></label>
+                <label>Client Address: <textarea name="client_address"></textarea></label>
+                <label>Date of Birth: <input type="date" name="dob"></label>
+                <label>Guardian/Mother Name: <input type="text" name="guardian_name"></label>
+                <label>Contact Number: <input type="text" name="contact_number"></label>
+                <label>Date of Assessment: <input type="date" name="assessment_date"></label>
+                <label>Time of Assessment: <input type="time" name="assessment_time"></label>
+                <label>Location/Method of Assessment: <input type="text" name="location_method"></label>
+                <label>Clinician Delivering Assessment: <input type="text" name="clinician"></label>
+            </div>
+            <div class="section">
+                <h3>Who Present at Assessment:</h3>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="present[]" value="Both"> Both</label>
+                    <label><input type="checkbox" name="present[]" value="Mother"> Mother</label>
+                    <label><input type="checkbox" name="present[]" value="Father"> Father</label>
+                    <label><input type="checkbox" name="present[]" value="Other"> Other (please specify): <input type="text" name="present_other"></label>
+                </div>
+            </div>
+        </div>
+        <!-- Right Column -->
+        <div class="column">
+            <div class="section">
+                <h3>Mental State Examination - Serial Recitation Tasks</h3>
+                <table>
+                    <tr><th>Task</th><th>Yes</th><th>No</th><th>Notes</th></tr>
+                    <tr>
+                        <td>Months of the Year Backwards</td>
+                        <td><input type="radio" name="months" value="Yes"></td>
+                        <td><input type="radio" name="months" value="No"></td>
+                        <td><input type="text" name="months_notes"></td>
+                    </tr>
+                    <tr>
+                        <td>Serial Threes</td>
+                        <td><input type="radio" name="serial_threes" value="Yes"></td>
+                        <td><input type="radio" name="serial_threes" value="No"></td>
+                        <td><input type="text" name="serial_threes_notes"></td>
+                    </tr>
+                    <tr>
+                        <td>Digit Span Forward</td>
+                        <td><input type="radio" name="digit_forward" value="Yes"></td>
+                        <td><input type="radio" name="digit_forward" value="No"></td>
+                        <td><input type="text" name="digit_forward_notes"></td>
+                    </tr>
+                    <tr>
+                        <td>Digit Span Reverse</td>
+                        <td><input type="radio" name="digit_reverse" value="Yes"></td>
+                        <td><input type="radio" name="digit_reverse" value="No"></td>
+                        <td><input type="text" name="digit_reverse_notes"></td>
+                    </tr>
+                    <tr>
+                        <td>Verbal “A” Test</td>
+                        <td><input type="radio" name="verbal_a" value="Yes"></td>
+                        <td><input type="radio" name="verbal_a" value="No"></td>
+                        <td><input type="text" name="verbal_a_notes"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="section">
+                <h3>Diagnosis and Management Plan</h3>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="diagnosis[]" value="ADHD Predominantly Inattentive Presentation"> ADHD Predominantly Inattentive Presentation (DSM - 5)</label>
+                    <label><input type="checkbox" name="diagnosis[]" value="ADHD Combined Presentation"> ADHD Combined Presentation (DSM - 5)</label>
+                    <label><input type="checkbox" name="diagnosis[]" value="ADHD Predominantly Hyperactive-Impulsive Presentation"> ADHD Predominantly Hyperactive-Impulsive Presentation (DSM - 5)</label>
+                    <label><input type="checkbox" name="diagnosis[]" value="ADHD Hyperactive-Impulsive Presentation"> ADHD Hyperactive-Impulsive Presentation (DSM - 5)</label>
+                    <label><input type="checkbox" name="diagnosis[]" value="ADHD Other Specified"> ADHD Other Specified</label>
+                    <label><input type="checkbox" name="diagnosis[]" value="Inconclusive"> Inconclusive</label>
+                </div>
+                <label>Other Diagnosis(es): <textarea name="other_diagnosis"></textarea></label>
+                <h4>Criteria</h4>
+                <label><input type="checkbox" name="criteria_a"> Criterion A: >6/9 symptoms in inattention and/or hyperactivity/impulsivity</label>
+                <label><input type="checkbox" name="criteria_b"> Criterion B: Symptoms were present before age 7/12</label>
+                <label><input type="checkbox" name="criteria_c"> Criterion C: Criteria are met in two or more settings</label>
+                <label><input type="checkbox" name="criteria_d"> Criterion D: Symptoms are causing impairment in social, academic, and home life</label>
+                <label><input type="checkbox" name="criteria_e"> Criterion E: Co-occurring difficulties considered</label>
+                <label>Details: <textarea name="criteria_details"></textarea></label>
+            </div>
+            <div class="section">
+                <h3>Plan</h3>
+                <label><input type="checkbox" name="plan_dx1"> Diagnosis of ADHD (DD.MM.YYYY)</label>
+                <label><input type="checkbox" name="plan_dx2"> Diagnosis of ADHD confirmed (DD.MM.YYYY)</label>
+                <label><input type="checkbox" name="plan_dx3"> Inconclusive diagnosis. Separate plan needed.</label>
+                <h4>Psychoeducation</h4>
+                <label><input type="checkbox" name="psycho1"> Psycho-education provided around diagnosis and discussed its implications</label>
+                <label><input type="checkbox" name="psycho2"> Psycho-education provided around pharmacological vs non-pharmacological interventions</label>
+                <label><input type="checkbox" name="psycho3"> Advised parents to enroll in Parents Plus through ADHD Ireland</label>
+                <label><input type="checkbox" name="psycho4"> Emphasized the need for routine/structure - even on holidays</label>
+                <label><input type="checkbox" name="psycho5"> Reminder to apply for DARE Scheme in LC year</label>
+                <h4>Further Medical Investigations</h4>
+                <label><input type="checkbox" name="med_investigation1"> Recommend GP follow up on concerns regarding: <input type="text" name="gp_followup_details"></label>
+                <label><input type="checkbox" name="med_investigation2"> Request blood investigations for: FBC, B12, Ferritin, Folate, Renal, LFTs, TFTs, repeat Coeliac Serology</label>
+                <label>Other (add details): <textarea name="med_other_details"></textarea></label>
+                <h4>Next Steps & Aftercare</h4>
+                <label>Review in <input type="text" name="review_time"> time or sooner if needed</label>
+                <label>Commenced on trial of (INSERT MEDICATION, DOSE, AND FREQUENCY): <input type="text" name="medication_trial"></label>
+                <label><input type="checkbox" name="aftercare1"> For trial of ADHD medication treatment</label>
+                <label><input type="checkbox" name="aftercare2"> Recommend Omega-3 Fish Oils (moderate level of evidence for ADHD)</label>
+                <label><input type="checkbox" name="aftercare3"> Recommend Iron Supplementation (Aim for Ferritin > 50ng/dL)</label>
+                <h4>Further Allied Health Assessments & Interventions</h4>
+                <label><input type="checkbox" name="allied1"> Consider for Cognitive Assessment and Educational assessment</label>
+                <label><input type="checkbox" name="allied2"> Consider for ASD assessment</label>
+                <label><input type="checkbox" name="allied3"> Consider for Speech and Language assessment</label>
+                <label><input type="checkbox" name="allied4"> Talking therapies to be considered once therapeutic dose obtained</label>
+                <label><input type="checkbox" name="allied5"> Recommend CBT as first-line treatment with low threshold for SSRI</label>
+                <label><input type="checkbox" name="allied6"> May benefit from OT input given motor coordination difficulties</label>
+                <label><input type="checkbox" name="allied7"> Recommend Speech and Language intervention</label>
+                <label>Details: <textarea name="allied_details"></textarea></label>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
