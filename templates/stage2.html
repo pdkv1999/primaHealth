@@ -6,34 +6,55 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 40px;
+      padding: 20px;
       background: #f3f6fa;
       margin: 0;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .container {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 30px;
-      max-width: 1400px;
-      margin: 0 auto;
+      gap: 20px;
     }
     .section {
       background: #fff;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px #ccc;
     }
     h2 {
       border-bottom: 2px solid #ddd;
-      padding-bottom: 8px;
-      margin-top: 0;
-      font-size: 1.5em;
+      padding-bottom: 6px;
+      margin: 0;
+      font-size: 1.3em;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    h2::after {
+      content: '+';
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    h2.expanded::after {
+      content: '−';
+    }
+    .section-content {
+      display: none;
+      margin-top: 10px;
+    }
+    .section-content.expanded {
+      display: block;
     }
     label {
       display: block;
-      margin: 8px 0 4px;
+      margin: 6px 0 3px;
       font-weight: bold;
+      font-size: 0.9em;
     }
     input[type="text"],
     input[type="date"],
@@ -41,46 +62,71 @@
     textarea,
     select {
       width: 100%;
-      padding: 8px;
+      padding: 6px;
       border-radius: 4px;
       border: 1px solid #bbb;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       box-sizing: border-box;
+      font-size: 0.9em;
     }
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 60px;
     }
     .grid-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px 20px;
-      margin-top: 10px;
+      gap: 8px 15px;
+      margin-top: 8px;
     }
     .question-block {
-      padding: 15px;
-      margin-top: 15px;
+      padding: 12px;
+      margin-top: 12px;
       border: 1px solid #e0e0e0;
-      border-radius: 8px;
+      border-radius: 6px;
       background: #fefefe;
     }
     .question-title {
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      font-size: 0.9em;
     }
     .question-block label {
       font-weight: normal;
+      font-size: 0.85em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85em;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 6px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
     }
     select {
       max-width: 100%;
     }
+    .radio-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .radio-group label {
+      font-weight: normal;
+      font-size: 0.85em;
+    }
     @media (max-width: 900px) {
       .container {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 15px;
       }
       .section {
-        padding: 15px;
+        padding: 12px;
       }
     }
   </style>
@@ -91,52 +137,46 @@
     <div class="column">
       <div class="section">
         <h2>Referral & Client Information</h2>
-        <label>Our Ref</label><input type="text">
-        <label>GP Name</label><input type="text">
-        <label>GP Address</label><textarea></textarea>
-        <label>Client/Patient Name</label><input type="text">
-        <label>Client/Patient Address</label><textarea></textarea>
-        <label>Date of Birth</label><input type="date">
-        <label>Guardian/Mother Name</label><input type="text">
-        <label>Contact Number</label><input type="text">
+        <div class="section-content">
+          <label>Our Ref</label><input type="text" name="ref">
+          <label>GP Name</label><input type="text" name="gp_name">
+          <label>GP Address</label><textarea name="gp_address"></textarea>
+          <label>Client/Patient Name</label><input type="text" name="client_name">
+          <label>Client/Patient Address</label><textarea name="client_address"></textarea>
+          <label>Date of Birth</label><input type="date" name="dob">
+          <label>Guardian/Mother Name</label><input type="text" name="guardian_name">
+          <label>Contact Number</label><input type="text" name="contact_number">
+        </div>
       </div>
       <div class="section">
         <h2>Assessment Appointment Details</h2>
-        <label>Date of Assessment</label><input type="date">
-        <label>Time of Assessment</label><input type="time">
-        <label>Location/Method of Assessment</label><input type="text">
-        <label>Clinician Delivering Assessment</label><input type="text">
+        <div class="section-content">
+          <label>Date of Assessment</label><input type="date" name="assessment_date">
+          <label>Time of Assessment</label><input type="time" name="assessment_time">
+          <label>Location/Method of Assessment</label><input type="text" name="location_method">
+          <label>Clinician Delivering Assessment</label><input type="text" name="clinician">
+        </div>
       </div>
       <div class="section">
         <h2>Reminders from Previous Sessions</h2>
-        <textarea rows="4"></textarea>
+        <div class="section-content">
+          <textarea rows="4" name="previous_reminders"></textarea>
+        </div>
       </div>
       <div class="section">
         <h2>Who Was Present</h2>
-        <label><input type="checkbox"> Mother</label>
-        <label><input type="checkbox"> Father</label>
-        <label><input type="checkbox"> Both</label>
-        <label>Other (specify)</label><input type="text">
+        <div class="section-content">
+          <label><input type="radio" name="present" value="Mother"> Mother</label>
+          <label><input type="radio" name="present" value="Father"> Father</label>
+          <label><input type="radio" name="present" value="Both"> Both</label>
+          <label>Other (specify)</label><input type="text" name="present_other">
+        </div>
       </div>
       <div class="section">
         <h2>Any Relevant Intro Notes</h2>
-        <textarea rows="4"></textarea>
-      </div>
-      <div class="section">
-        <h2>Next Steps</h2>
-        <label>Additional Assessments to Consider:</label>
-        <label>OT?</label><input type="text">
-        <label>SLT?</label><input type="text">
-        <label>Cognitive?</label><input type="text">
-        <label>Other?</label><input type="text">
-      </div>
-      <div class="section">
-        <h2>Next Appointment Details</h2>
-        <label>Next Session Type?</label><input type="text">
-        <label>Other Details</label><textarea></textarea>
-        <label>Any clinician reminders for next appointment?</label><textarea></textarea>
-        <label>Any personal info about young person to lead with?</label><textarea></textarea>
-        <label>Additional relevant notes</label><textarea></textarea>
+        <div class="section-content">
+          <textarea rows="4" name="intro_notes"></textarea>
+        </div>
       </div>
     </div>
 
@@ -144,510 +184,654 @@
     <div class="column">
       <div class="section">
         <h2>Mental State Examination</h2>
-        <label>Months of the Year Backwards</label><select><option>Yes</option><option>No</option></select>
-        <label>Serial Threes</label><select><option>Yes</option><option>No</option></select>
-        <label>Digit Span Forward</label><select><option>Yes</option><option>No</option></select>
-        <label>Digit Span Reverse</label><select><option>Yes</option><option>No</option></select>
-        <label>Verbal “A” Test</label><select><option>Yes</option><option>No</option></select>
+        <div class="section-content">
+          <table>
+            <tr><th>Task</th><th>Yes</th><th>No</th><th>Notes</th></tr>
+            <tr>
+              <td>Months of the Year Backwards</td>
+              <td><input type="radio" name="months" value="Yes"></td>
+              <td><input type="radio" name="months" value="No"></td>
+              <td><input type="text" name="months_notes"></td>
+            </tr>
+            <tr>
+              <td>Serial Threes</td>
+              <td><input type="radio" name="serial_threes" value="Yes"></td>
+              <td><input type="radio" name="serial_threes" value="No"></td>
+              <td><input type="text" name="serial_threes_notes"></td>
+            </tr>
+            <tr>
+              <td>Digit Span Forward</td>
+              <td><input type="radio" name="digit_forward" value="Yes"></td>
+              <td><input type="radio" name="digit_forward" value="No"></td>
+              <td><input type="text" name="digit_forward_notes"></td>
+            </tr>
+            <tr>
+              <td>Digit Span Reverse</td>
+              <td><input type="radio" name="digit_reverse" value="Yes"></td>
+              <td><input type="radio" name="digit_reverse" value="No"></td>
+              <td><input type="text" name="digit_reverse_notes"></td>
+            </tr>
+            <tr>
+              <td>Verbal “A” Test</td>
+              <td><input type="radio" name="verbal_a" value="Yes"></td>
+              <td><input type="radio" name="verbal_a" value="No"></td>
+              <td><input type="text" name="verbal_a_notes"></td>
+            </tr>
+          </table>
+          <label>Additional Notes</label>
+          <textarea rows="4" name="mental_state_notes"></textarea>
+        </div>
       </div>
       <div class="section">
         <h2>Inattention ( /9)</h2>
-        <div class="question-block">
-          <div class="question-title">1. Careless mistakes in school work or activities.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="inatt1_freq"> Yes</label>
-              <label><input type="radio" name="inatt1_freq"> No</label>
+        <div class="section-content">
+          <div class="question-block">
+            <div class="question-title">1. Careless mistakes in school work or activities.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="inatt1_freq"> Yes</label>
+                <label><input type="radio" name="inatt1_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="inatt1_impact"> Yes</label>
+                <label><input type="radio" name="inatt1_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="inatt1_other"> Yes</label>
+                <label><input type="radio" name="inatt1_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="inatt1_criteria"> Yes</label>
+                <label><input type="radio" name="inatt1_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="inatt1_impact"> Yes</label>
-              <label><input type="radio" name="inatt1_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="inatt1_other"> Yes</label>
-              <label><input type="radio" name="inatt1_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="inatt1_criteria"> Yes</label>
-              <label><input type="radio" name="inatt1_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="inatt1_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">2. Difficulty sustaining attention in tasks or activities.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="inatt2_freq"> Yes</label>
-              <label><input type="radio" name="inatt2_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">2. Difficulty sustaining attention in tasks or activities.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="inatt2_freq"> Yes</label>
+                <label><input type="radio" name="inatt2_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="inatt2_impact"> Yes</label>
+                <label><input type="radio" name="inatt2_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="inatt2_other"> Yes</label>
+                <label><input type="radio" name="inatt2_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="inatt2_criteria"> Yes</label>
+                <label><input type="radio" name="inatt2_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="inatt2_impact"> Yes</label>
-              <label><input type="radio" name="inatt2_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="inatt2_other"> Yes</label>
-              <label><input type="radio" name="inatt2_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="inatt2_criteria"> Yes</label>
-              <label><input type="radio" name="inatt2_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="inatt2_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">3. Not listening when spoken to (i.e. dreamy, pre-occupied).</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="inatt3_freq"> Yes</label>
-              <label><input type="radio" name="inatt3_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">3. Not listening when spoken to (i.e. dreamy, pre-occupied).</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="inatt3_freq"> Yes</label>
+                <label><input type="radio" name="inatt3_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="inatt3_impact"> Yes</label>
+                <label><input type="radio" name="inatt3_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="inatt3_other"> Yes</label>
+                <label><input type="radio" name="inatt3_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="inatt3_criteria"> Yes</label>
+                <label><input type="radio" name="inatt3_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="inatt3_impact"> Yes</label>
-              <label><input type="radio" name="inatt3_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="inatt3_other"> Yes</label>
-              <label><input type="radio" name="inatt3_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="inatt3_criteria"> Yes</label>
-              <label><input type="radio" name="inatt3_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="inatt3_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">4. Not following through on instructions, failing to finish school work or chores.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="inatt4_freq"> Yes</label>
-              <label><input type="radio" name="inatt4_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">4. Not following through on instructions, failing to finish school work or chores.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="inatt4_freq"> Yes</label>
+                <label><input type="radio" name="inatt4_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="inatt4_impact"> Yes</label>
+                <label><input type="radio" name="inatt4_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="inatt4_other"> Yes</label>
+                <label><input type="radio" name="inatt4_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="inatt4_criteria"> Yes</label>
+                <label><input type="radio" name="inatt4_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="inatt4_impact"> Yes</label>
-              <label><input type="radio" name="inatt4_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="inatt4_other"> Yes</label>
-              <label><input type="radio" name="inatt4_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="inatt4_criteria"> Yes</label>
-              <label><input type="radio" name="inatt4_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="inatt4_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">5. Difficulty organizing tasks/activities.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="inatt5_freq"> Yes</label>
-              <label><input type="radio" name="inatt5_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">5. Difficulty organizing tasks/activities.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="inatt5_freq"> Yes</label>
+                <label><input type="radio" name="inatt5_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="inatt5_impact"> Yes</label>
+                <label><input type="radio" name="inatt5_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="inatt5_other"> Yes</label>
+                <label><input type="radio" name="inatt5_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="inatt5_criteria"> Yes</label>
+                <label><input type="radio" name="inatt5_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="inatt5_impact"> Yes</label>
-              <label><input type="radio" name="inatt5_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="inatt5_other"> Yes</label>
-              <label><input type="radio" name="inatt5_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="inatt5_criteria"> Yes</label>
-              <label><input type="radio" name="inatt5_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="inatt5_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">6. Avoids, dislikes or reluctant to-engange in activities that require sustained mental effort.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="inatt6_freq"> Yes</label>
-              <label><input type="radio" name="inatt6_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">6. Avoids, dislikes or reluctant to-engage in activities that require sustained mental effort.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="inatt6_freq"> Yes</label>
+                <label><input type="radio" name="inatt6_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="inatt6_impact"> Yes</label>
+                <label><input type="radio" name="inatt6_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="inatt6_other"> Yes</label>
+                <label><input type="radio" name="inatt6_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="inatt6_criteria"> Yes</label>
+                <label><input type="radio" name="inatt6_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="inatt6_impact"> Yes</label>
-              <label><input type="radio" name="inatt6_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="inatt6_other"> Yes</label>
-              <label><input type="radio" name="inatt6_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="inatt6_criteria"> Yes</label>
-              <label><input type="radio" name="inatt6_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="inatt6_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">7. Losing things necessary for school/home.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="inatt7_freq"> Yes</label>
-              <label><input type="radio" name="inatt7_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">7. Losing things necessary for school/home.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="inatt7_freq"> Yes</label>
+                <label><input type="radio" name="inatt7_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="inatt7_impact"> Yes</label>
+                <label><input type="radio" name="inatt7_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="inatt7_other"> Yes</label>
+                <label><input type="radio" name="inatt7_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="inatt7_criteria"> Yes</label>
+                <label><input type="radio" name="inatt7_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="inatt7_impact"> Yes</label>
-              <label><input type="radio" name="inatt7_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="inatt7_other"> Yes</label>
-              <label><input type="radio" name="inatt7_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="inatt7_criteria"> Yes</label>
-              <label><input type="radio" name="inatt7_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="inatt7_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">8. Easily distracted by external stimuli.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="inatt8_freq"> Yes</label>
-              <label><input type="radio" name="inatt8_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">8. Easily distracted by external stimuli.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="inatt8_freq"> Yes</label>
+                <label><input type="radio" name="inatt8_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="inatt8_impact"> Yes</label>
+                <label><input type="radio" name="inatt8_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="inatt8_other"> Yes</label>
+                <label><input type="radio" name="inatt8_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="inatt8_criteria"> Yes</label>
+                <label><input type="radio" name="inatt8_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="inatt8_impact"> Yes</label>
-              <label><input type="radio" name="inatt8_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="inatt8_other"> Yes</label>
-              <label><input type="radio" name="inatt8_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="inatt8_criteria"> Yes</label>
-              <label><input type="radio" name="inatt8_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="inatt8_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">9. Often forgetful in daily activities.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="inatt9_freq"> Yes</label>
-              <label><input type="radio" name="inatt9_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">9. Often forgetful in daily activities.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="inatt9_freq"> Yes</label>
+                <label><input type="radio" name="inatt9_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="inatt9_impact"> Yes</label>
+                <label><input type="radio" name="inatt9_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="inatt9_other"> Yes</label>
+                <label><input type="radio" name="inatt9_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="inatt9_criteria"> Yes</label>
+                <label><input type="radio" name="inatt9_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="inatt9_impact"> Yes</label>
-              <label><input type="radio" name="inatt9_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="inatt9_other"> Yes</label>
-              <label><input type="radio" name="inatt9_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="inatt9_criteria"> Yes</label>
-              <label><input type="radio" name="inatt9_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="inatt9_notes"></textarea>
           </div>
         </div>
       </div>
       <div class="section">
         <h2>Hyperactivity/Impulsivity ( /9)</h2>
-        <div class="question-block">
-          <div class="question-title">1. Fidgets, squirms, or taps hands or feet.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="hyper1_freq"> Yes</label>
-              <label><input type="radio" name="hyper1_freq"> No</label>
+        <div class="section-content">
+          <div class="question-block">
+            <div class="question-title">1. Fidgets, squirms, or taps hands or feet.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="hyper1_freq"> Yes</label>
+                <label><input type="radio" name="hyper1_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="hyper1_impact"> Yes</label>
+                <label><input type="radio" name="hyper1_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="hyper1_other"> Yes</label>
+                <label><input type="radio" name="hyper1_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="hyper1_criteria"> Yes</label>
+                <label><input type="radio" name="hyper1_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="hyper1_impact"> Yes</label>
-              <label><input type="radio" name="hyper1_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="hyper1_other"> Yes</label>
-              <label><input type="radio" name="hyper1_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="hyper1_criteria"> Yes</label>
-              <label><input type="radio" name="hyper1_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="hyper1_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">2. Unable to remain seated.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="hyper2_freq"> Yes</label>
-              <label><input type="radio" name="hyper2_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">2. Unable to remain seated.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="hyper2_freq"> Yes</label>
+                <label><input type="radio" name="hyper2_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="hyper2_impact"> Yes</label>
+                <label><input type="radio" name="hyper2_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="hyper2_other"> Yes</label>
+                <label><input type="radio" name="hyper2_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="hyper2_criteria"> Yes</label>
+                <label><input type="radio" name="hyper2_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="hyper2_impact"> Yes</label>
-              <label><input type="radio" name="hyper2_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="hyper2_other"> Yes</label>
-              <label><input type="radio" name="hyper2_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="hyper2_criteria"> Yes</label>
-              <label><input type="radio" name="hyper2_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="hyper2_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">3. Runs, climbs where inappropriate (or inner restlessness).</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="hyper3_freq"> Yes</label>
-              <label><input type="radio" name="hyper3_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">3. Runs, climbs where inappropriate (or inner restlessness).</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="hyper3_freq"> Yes</label>
+                <label><input type="radio" name="hyper3_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="hyper3_impact"> Yes</label>
+                <label><input type="radio" name="hyper3_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="hyper3_other"> Yes</label>
+                <label><input type="radio" name="hyper3_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="hyper3_criteria"> Yes</label>
+                <label><input type="radio" name="hyper3_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="hyper3_impact"> Yes</label>
-              <label><input type="radio" name="hyper3_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="hyper3_other"> Yes</label>
-              <label><input type="radio" name="hyper3_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="hyper3_criteria"> Yes</label>
-              <label><input type="radio" name="hyper3_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="hyper3_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">4. Unable to engage in play/activities quietly.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="hyper4_freq"> Yes</label>
-              <label><input type="radio" name="hyper4_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">4. Unable to engage in play/activities quietly.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="hyper4_freq"> Yes</label>
+                <label><input type="radio" name="hyper4_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="hyper4_impact"> Yes</label>
+                <label><input type="radio" name="hyper4_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="hyper4_other"> Yes</label>
+                <label><input type="radio" name="hyper4_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="hyper4_criteria"> Yes</label>
+                <label><input type="radio" name="hyper4_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="hyper4_impact"> Yes</label>
-              <label><input type="radio" name="hyper4_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="hyper4_other"> Yes</label>
-              <label><input type="radio" name="hyper4_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="hyper4_criteria"> Yes</label>
-              <label><input type="radio" name="hyper4_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="hyper4_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">5. Often 'on the go' or acts as if 'driven by a motor'.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="hyper5_freq"> Yes</label>
-              <label><input type="radio" name="hyper5_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">5. Often 'on the go' or acts as if 'driven by a motor'.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="hyper5_freq"> Yes</label>
+                <label><input type="radio" name="hyper5_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="hyper5_impact"> Yes</label>
+                <label><input type="radio" name="hyper5_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="hyper5_other"> Yes</label>
+                <label><input type="radio" name="hyper5_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="hyper5_criteria"> Yes</label>
+                <label><input type="radio" name="hyper5_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="hyper5_impact"> Yes</label>
-              <label><input type="radio" name="hyper5_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="hyper5_other"> Yes</label>
-              <label><input type="radio" name="hyper5_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="hyper5_criteria"> Yes</label>
-              <label><input type="radio" name="hyper5_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="hyper5_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">6. Talks excessively.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="hyper6_freq"> Yes</label>
-              <label><input type="radio" name="hyper6_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">6. Talks excessively.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="hyper6_freq"> Yes</label>
+                <label><input type="radio" name="hyper6_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="hyper6_impact"> Yes</label>
+                <label><input type="radio" name="hyper6_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="hyper6_other"> Yes</label>
+                <label><input type="radio" name="hyper6_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="hyper6_criteria"> Yes</label>
+                <label><input type="radio" name="hyper6_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="hyper6_impact"> Yes</label>
-              <label><input type="radio" name="hyper6_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="hyper6_other"> Yes</label>
-              <label><input type="radio" name="hyper6_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="hyper6_criteria"> Yes</label>
-              <label><input type="radio" name="hyper6_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="hyper6_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">7. Blurts out answers before questions are completed.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="hyper7_freq"> Yes</label>
-              <label><input type="radio" name="hyper7_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">7. Blurts out answers before questions are completed.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="hyper7_freq"> Yes</label>
+                <label><input type="radio" name="hyper7_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="hyper7_impact"> Yes</label>
+                <label><input type="radio" name="hyper7_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="hyper7_other"> Yes</label>
+                <label><input type="radio" name="hyper7_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="hyper7_criteria"> Yes</label>
+                <label><input type="radio" name="hyper7_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="hyper7_impact"> Yes</label>
-              <label><input type="radio" name="hyper7_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="hyper7_other"> Yes</label>
-              <label><input type="radio" name="hyper7_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="hyper7_criteria"> Yes</label>
-              <label><input type="radio" name="hyper7_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="hyper7_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">8. Difficulty waiting their turn.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="hyper8_freq"> Yes</label>
-              <label><input type="radio" name="hyper8_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">8. Difficulty waiting their turn.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="hyper8_freq"> Yes</label>
+                <label><input type="radio" name="hyper8_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="hyper8_impact"> Yes</label>
+                <label><input type="radio" name="hyper8_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="hyper8_other"> Yes</label>
+                <label><input type="radio" name="hyper8_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="hyper8_criteria"> Yes</label>
+                <label><input type="radio" name="hyper8_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="hyper8_impact"> Yes</label>
-              <label><input type="radio" name="hyper8_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="hyper8_other"> Yes</label>
-              <label><input type="radio" name="hyper8_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="hyper8_criteria"> Yes</label>
-              <label><input type="radio" name="hyper8_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="hyper8_notes"></textarea>
           </div>
-        </div>
-        <div class="question-block">
-          <div class="question-title">9. Interrupts or intrudes on others.</div>
-          <div class="grid-container">
-            <div>
-              <label>Frequently observed:</label>
-              <label><input type="radio" name="hyper9_freq"> Yes</label>
-              <label><input type="radio" name="hyper9_freq"> No</label>
+          <div class="question-block">
+            <div class="question-title">9. Interrupts or intrudes on others.</div>
+            <div class="grid-container">
+              <div>
+                <label>Frequently observed:</label>
+                <label><input type="radio" name="hyper9_freq"> Yes</label>
+                <label><input type="radio" name="hyper9_freq"> No</label>
+              </div>
+              <div>
+                <label>Causes difficulties/impairment:</label>
+                <label><input type="radio" name="hyper9_impact"> Yes</label>
+                <label><input type="radio" name="hyper9_impact"> No</label>
+              </div>
+              <div>
+                <label>Other conditions considered:</label>
+                <label><input type="radio" name="hyper9_other"> Yes</label>
+                <label><input type="radio" name="hyper9_other"> No</label>
+              </div>
+              <div>
+                <label>Criteria Met:</label>
+                <label><input type="radio" name="hyper9_criteria"> Yes</label>
+                <label><input type="radio" name="hyper9_criteria"> No</label>
+              </div>
             </div>
-            <div>
-              <label>Causes difficulties/impairment:</label>
-              <label><input type="radio" name="hyper9_impact"> Yes</label>
-              <label><input type="radio" name="hyper9_impact"> No</label>
-            </div>
-            <div>
-              <label>Other conditions considered:</label>
-              <label><input type="radio" name="hyper9_other"> Yes</label>
-              <label><input type="radio" name="hyper9_other"> No</label>
-            </div>
-            <div>
-              <label>Criteria Met:</label>
-              <label><input type="radio" name="hyper9_criteria"> Yes</label>
-              <label><input type="radio" name="hyper9_criteria"> No</label>
-            </div>
+            <label>Notes</label>
+            <textarea rows="4" name="hyper9_notes"></textarea>
           </div>
         </div>
       </div>
       <div class="section">
         <h2>Other Areas of Difficulty Related to ADHD</h2>
-        <textarea rows="4"></textarea>
+        <div class="section-content">
+          <textarea rows="4" name="other_difficulties"></textarea>
+        </div>
       </div>
       <div class="section">
         <h2>Any Suspected Comorbidities</h2>
-        <textarea rows="4"></textarea>
+        <div class="section-content">
+          <textarea rows="4" name="comorbidities"></textarea>
+        </div>
       </div>
       <div class="section">
         <h2>Any Other Notes</h2>
-        <textarea rows="4"></textarea>
+        <div class="section-content">
+          <textarea rows="4" name="other_notes"></textarea>
+        </div>
       </div>
       <div class="section">
         <h2>Summary of Preliminary ADHD Assessment</h2>
-        <select>
-          <option>ADHD Predominantly Inattentive Presentation (DSM-5)</option>
-          <option>ADHD Combined Presentation (DSM-5)</option>
-          <option>ADHD Predominantly Hyperactive-Impulsive Presentation (DSM-5)</option>
-          <option>ADHD Inattentive Presentation (DSM-5)</option>
-          <option>ADHD Hyperactive-Impulsive Presentation (DSM-5)</option>
-          <option>ADHD Other Specified</option>
-          <option>Inconclusive</option>
-        </select>
+        <div class="section-content">
+          <select name="preliminary_summary">
+            <option>ADHD Predominantly Inattentive Presentation (DSM-5)</option>
+            <option>ADHD Combined Presentation (DSM-5)</option>
+            <option>ADHD Predominantly Hyperactive-Impulsive Presentation (DSM-5)</option>
+            <option>ADHD Inattentive Presentation (DSM-5)</option>
+            <option>ADHD Hyperactive-Impulsive Presentation (DSM-5)</option>
+            <option>ADHD Other Specified</option>
+            <option>Inconclusive</option>
+          </select>
+        </div>
+      </div>
+      <div class="section">
+        <h2>Next Steps</h2>
+        <div class="section-content">
+          <label>Additional Assessments/Investigations to Consider:</label>
+          <div class="question-block">
+            <div class="question-title">OT?</div>
+            <div class="radio-group">
+              <label><input type="radio" name="ot" value="Yes"> Yes</label>
+              <label><input type="radio" name="ot" value="No"> No</label>
+            </div>
+            <label>Details if Yes:</label>
+            <textarea rows="4" name="ot_details"></textarea>
+          </div>
+          <div class="question-block">
+            <div class="question-title">SLT?</div>
+            <div class="radio-group">
+              <label><input type="radio" name="slt" value="Yes"> Yes</label>
+              <label><input type="radio" name="slt" value="No"> No</label>
+            </div>
+            <label>Details if Yes:</label>
+            <textarea rows="4" name="slt_details"></textarea>
+          </div>
+          <div class="question-block">
+            <div class="question-title">Cognitive?</div>
+            <div class="radio-group">
+              <label><input type="radio" name="cognitive" value="Yes"> Yes</label>
+              <label><input type="radio" name="cognitive" value="No"> No</label>
+            </div>
+            <label>Details if Yes:</label>
+            <textarea rows="4" name="cognitive_details"></textarea>
+          </div>
+          <div class="question-block">
+            <div class="question-title">Other?</div>
+            <div class="radio-group">
+              <label><input type="radio" name="other" value="Yes"> Yes</label>
+              <label><input type="radio" name="other" value="No"> No</label>
+            </div>
+            <label>Details if Yes:</label>
+            <textarea rows="4" name="other_details"></textarea>
+          </div>
+          <label>Next Session Type?</label>
+          <input type="text" name="next_session_type">
+          <label>Other Details:</label>
+          <textarea rows="4" name="other_details"></textarea>
+          <label>Any clinician reminders for next appointment?</label>
+          <textarea rows="4" name="clinician_reminders"></textarea>
+          <label>Any personal info about young person's life to lead with at the next appointment?</label>
+          <textarea rows="4" name="personal_info"></textarea>
+          <label>Any additional relevant notes?</label>
+          <textarea rows="4" name="additional_notes"></textarea>
+        </div>
       </div>
       <div class="section">
         <h2>Diagnostic Outcome</h2>
-        <select>
-          <option>ADHD Predominantly Inattentive Presentation (DSM-5)</option>
-          <option>ADHD Combined Presentation (DSM-5)</option>
-          <option>ADHD Predominantly Hyperactive-Impulsive Presentation (DSM-5)</option>
-          <option>ADHD Inattentive Presentation (DSM-5)</option>
-          <option>ADHD Hyperactive-Impulsive Presentation (DSM-5)</option>
-          <option>ADHD Other Specified</option>
-          <option>ADHD Unspecified Presentation</option>
-          <option>Likely ADHD but further information required</option>
-          <option>Presentation consistent with ADHD but inconclusive</option>
-          <option>Presentation does not meet full ADHD diagnostic criteria</option>
-          <option>Presentation likely influenced by other factors (e.g., trauma, ASD)</option>
-          <option>Inconclusive - Consider further cognitive assessment</option>
-        </select>
+        <div class="section-content">
+          <select name="diagnostic_outcome">
+            <option>ADHD Predominantly Inattentive Presentation (DSM-5)</option>
+            <option>ADHD Combined Presentation (DSM-5)</option>
+            <option>ADHD Predominantly Hyperactive-Impulsive Presentation (DSM-5)</option>
+            <option>ADHD Inattentive Presentation (DSM-5)</option>
+            <option>ADHD Hyperactive-Impulsive Presentation (DSM-5)</option>
+            <option>ADHD Other Specified</option>
+            <option>ADHD Unspecified Presentation</option>
+            <option>Likely ADHD but further information required</option>
+            <option>Presentation consistent with ADHD but inconclusive</option>
+            <option>Presentation does not meet full ADHD diagnostic criteria</option>
+            <option>Presentation likely influenced by other factors (e.g., trauma, ASD)</option>
+            <option>Inconclusive - Consider further cognitive assessment</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
+
+  <script>
+    document.querySelectorAll('.section h2').forEach(header => {
+      header.addEventListener('click', () => {
+        const content = header.nextElementSibling;
+        header.classList.toggle('expanded');
+        content.classList.toggle('expanded');
+      });
+    });
+  </script>
 </body>
 </html>
