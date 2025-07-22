@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Full Editable Report</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            margin: 40px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
+        }
+        .editable {
+            background-color: #ffffcc;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .editable:hover {
+            background-color: #fff9a8;
+        }
+        .input-popup {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 10;
+            width: 300px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+        table td, table th {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 40px;
+        }
+        .report-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 200px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            cursor: pointer;
+        }
+        .report-button:hover {
+            background-color: #e0e0e0;
+        }
+        #reportContent {
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: white;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Final Report – Under 12s</h2>
+
+<div id="reportContent">
+<p>Date: <span class="editable">DD.MM.YYYY</span></p>
+<p><span class="editable">GP Name</span></p>
+<p><span class="editable">GP Address</span></p>
+<p></p>
+<p>cc: Parent(s)/Guardian(s) of <span class="editable">Name of Client/Patient</span></p>
+<p><span class="editable">Name of additional doctor if relevant</span></p>
+<p><span class="editable">Name of additional doctor if relevant</span></p>
+<p></p>
+<p>Re: <span class="editable">Client/Patient Full Name</span>, <span class="editable">Client/Patient Home Address</span></p>
+<p>Date of Birth: <span class="editable">DD.MM.YYYY</span> Our Ref: PH25 - <span class="editable">REF Number</span></p>
+<p>Diagnosis: <span class="editable">S3</span></p>
+<p>Plan: </p>
+<p>_________________________________________________________________________</p>
+<p>Dear Dr. <span class="editable">GP Surname</span>,</p>
+<p></p>
+<p>Thank you for referring53.2 <span class="editable">Client/Patient First Name</span> (<span class="editable">right/left handed</span>, <span class="editable">Age - years & months</span>, <span class="editable">year in school</span> at <span class="editable">school name</span>) for an ADHD assessment. An initial intake call was carried out with his/her <span class="editable">mother/father/guardian/both parents</span> on <span class="editable">Date of S1 - DD.MM.YYY</span>. Our Senior Educational Psychologist, Dr. Mary Gallagher, met with <span class="editable">Client/Patient First Name</span> and his/her <span class="editable">mother/father/guardian/both parents</span> on <span class="editable">Date of Cognitive Assessment - DD.MM.YYYY</span> to complete a cognitive assessment. I met with <span class="editable">Client/Patient First Name</span> and his/her <span class="editable">mother/father/guardian/both parents</span> on <span class="editable">Date of S2 - DD.MM.YYYY</span> to complete a clinical assessment and then again on <span class="editable">Date of S3 - DD.MM.YYYY</span> to provide feedback and for forward planning purposes. I enclose a summary of my assessment below.</p>
+<p></p>
+<p>Referral Background</p>
+<p><span class="editable">S1</span></p>
+<p>Medical History</p>
+<p><span class="editable">S1</span></p>
+<p>Medications and Supplements</p>
+<p><span class="editable">S1</span></p>
+<p>Past Surgical/Procedural History</p>
+<p><span class="editable">S1</span></p>
+<p>Drug Allergies/Intolerances</p>
+<p><span class="editable">S1</span></p>
+<p>Family History</p>
+<p><span class="editable">S1</span></p>
+<p>Substance History</p>
+<p><span class="editable">S1</span></p>
+<p>Forensic History</p>
+<p><span class="editable">S1</span></p>
+<p></p>
+<p>Pregnancy and Developmental Milestones</p>
+<p><span class="editable">S1</span></p>
+<p> </p>
+<p>Conners - 4 Report</p>
+<p><span class="editable">Client/Patient First Name</span> completed the Self-Report on <span class="editable">Date of Patient Report Administration</span>.</p>
+<p><span class="editable">Client/Patient First Name</span>’s parent completed the Parent Report on <span class="editable">Date of Parent Report Administration</span>.</p>
+<p><span class="editable">Teacher Name</span>, <span class="editable">Teacher Title</span>, completed the Teacher Report on <span class="editable">Date of Teacher Report Administration</span>.</p>
+<table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">
+    <tr>
+        <th></th>
+        <th>ADHD-I</th>
+        <th>ADHD-II</th>
+        <th>ODD</th>
+        <th>CD</th>
+        <th>Probability Score</th>
+    </tr>
+    <tr>
+        <td>Self-Report</td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+    </tr>
+    <tr>
+        <td>Parent</td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+    </tr>
+    <tr>
+        <td>Teacher</td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+        <td class="editable"></td>
+    </tr>
+</table>
+<p>Note. ADHD-I = Inattention symptoms; ADHD-II = hyperactivity/impulsivity symptoms; ODD = oppositional defiant disorder symptoms; CD = conduct disorder symptoms.</p>
+<p></p>
+<p>Cognitive Assessment</p>
+<p>Our Senior Educational Psychologist, Dr. Mary Gallagher, met with <span class="editable">Client/Patient First Name</span> and her/his <span class="editable">mother/father/both</span> on <span class="editable">Cognitive Assessment Date - DD.MM.YYYY</span> to complete a cognitive assessment. A summary of the assessment is presented below, with the full results and recommendations from the assessment presented in Appendix A.</p>
+<p><span class="editable">Table from Cognitive Assessment</span></p>
+<p><span class="editable">Summary from Cognitive Assessment</span></p>
+<p>Diagnostic Considerations from Cognitive Assessment</p>
+<p></p>
+<p>Clinical Assessment and Reported History</p>
+<p><span class="editable">S2</span></p>
+<p></p>
+<p>Telephone Call with <span class="editable">Client/Patient First Name</span>’s Teacher</p>
+<p><span class="editable">Teacher Call Proforma</span></p>
+<p></p>
+<p>Other Areas of Difficulty </p>
+<p><span class="editable">S2</span></p>
+<p> </p>
+<p>Mental State Examination (DD.MM.YYYY):</p>
+<p><span class="editable">S2 or S3</span></p>
+<p> </p>
+<p>Diagnosis and Management Plan</p>
+<p></p>
+<p><span class="editable">Client/Patient First Name</span>’s history, clinical presentation, quantitative measures (Conners - 4 Reports) and findings from the cognitive assessment would be consistent with a diagnosis of <span class="editable">ADHD diagnosis</span>. She/He met the DSM - 5 criteria as outlined below:</p>
+<p></p>
+<table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">
+    <tr>
+        <th>Criteria</th>
+        <th>Criteria Met</th>
+    </tr>
+    <tr>
+        <td>Criterion A: >6/9 symptoms in Inattention and/or Hyperactivity/Impulsivity.</td>
+        <td class="editable"></td>
+    </tr>
+    <tr>
+        <td>Criterion B: Symptoms were present before age 7.</td>
+        <td class="editable"></td>
+    </tr>
+    <tr>
+        <td>Criterion C: Criteria are met in two or more settings.</td>
+        <td class="editable"></td>
+    </tr>
+    <tr>
+        <td>Criterion D: The symptoms are causing impairment in social, academic, and home life.</td>
+        <td class="editable"></td>
+    </tr>
+    <tr>
+        <td>Criterion E (Consideration of other disorders/difficulties): Co-occurring difficulties were considered in the client’s presentation.</td>
+        <td class="editable"></td>
+    </tr>
+</table>
+<p></p>
+<p>If you have any questions or concerns please do not hesitate to contact me at the clinic.</p>
+<p></p>
+<p>Regards,</p>
+<p></p>
+<p>____________________</p>
+<p>Dr. Leo Yoshida MCN 406391</p>
+<p>Clinical Director, Consultant Child & Adolescent Psychiatrist</p>
+<p>B.Sc (Pharm) MB BCh BAO Dip Clin Leadership MCPsychI MRCPsych</p>
+<p></p>
+<p>_________________________________________</p>
+<p>Mary Gallagher, Ph.D., CPsychol</p>
+<p>Senior Educational Psychologist</p>
+<p>BPS: 770822/PSI: M11149</p>
+<p></p>
+<p>Appendix A</p>
+<p></p>
+<p><span class="editable">Full Cognitive Assessment Report added here</span></p>
+</div>
+
+<div id="popup" class="input-popup">
+    <label>Edit Field:</label><br>
+    <textarea id="popupInput" rows="4" style="width: 100%;"></textarea><br><br>
+    <button onclick="saveInput()">Save</button>
+    <button onclick="closePopup()">Cancel</button>
+</div>
+
+<div class="button-container">
+    <button class="report-button" onclick="saveReport()">💾 Save Final Report</button>
+    <button class="report-button" onclick="previewReport()">👁️ Preview Report</button>
+    <button class="report-button" onclick="window.print()">🖨️ Print to PDF</button>
+    <button class="report-button" onclick="sendEmail()">📧 Send Encrypted Email to G1</button>
+</div>
+
+<script>
+    let currentEditable = null;
+
+    document.querySelectorAll('.editable').forEach(el => {
+        el.addEventListener('click', function(event) {
+            currentEditable = event.target;
+            let popup = document.getElementById('popup');
+            let input = document.getElementById('popupInput');
+            input.value = currentEditable.textContent;
+            popup.style.left = (event.pageX + 10) + 'px';
+            popup.style.top = (event.pageY + 10) + 'px';
+            popup.style.display = 'block';
+            input.focus();
+        });
+    });
+
+    function saveInput() {
+        const value = document.getElementById('popupInput').value;
+        currentEditable.textContent = value;
+        closePopup();
+    }
+
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+    }
+
+    function saveReport() {
+        let reportText = document.getElementById("reportContent").innerText;
+        alert("Final Report Saved.\n\n" + reportText);
+    }
+
+    function previewReport() {
+        let content = document.getElementById("reportContent").innerHTML;
+        let newWin = window.open("", "_blank");
+        newWin.document.write("<html><head><title>Report Preview</title><style>body{font-family:Georgia,serif;margin:40px;line-height:1.6;}table{border-collapse:collapse;width:100%;}td,th{border:1px solid #000;padding:8px;}</style></head><body>");
+        newWin.document.write(content);
+        newWin.document.write("</body></html>");
+        newWin.document.close();
+    }
+
+    function sendEmail() {
+        alert("Encrypted email sending to G1 triggered. This would use secure email API in production.");
+    }
+</script>
+</body>
+</html>

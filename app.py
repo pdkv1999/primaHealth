@@ -45,6 +45,14 @@ def stage3():
 def stage4():
     return render_template('stage4.html')
 
+@app.route('/phase2/stage4/under12')
+def under12():
+    return render_template('under12.html')
+
+@app.route('/phase2/stage4/over12')
+def over12():
+    return render_template('over12.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
