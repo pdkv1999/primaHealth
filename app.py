@@ -24,6 +24,10 @@ def consent():
 def login():
     return render_template('login.html')
 
+@app.route('/phase1/login_cc')
+def login_cc():
+    return render_template('login_cc.html')
+
 @app.route('/phase1/ap_screen')
 def ap_screen():
     return render_template('ap_screen.html')
