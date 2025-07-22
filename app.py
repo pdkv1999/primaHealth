@@ -16,6 +16,10 @@ def phase1():
 @app.route('/phase2')
 def phase2():
     return render_template('phase2.html')
+
+@app.route('/consent')
+def consent():
+    return render_template('consent.html')
 @app.route('/phase1/login')
 def login():
     return render_template('login.html')
