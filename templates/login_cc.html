@@ -44,14 +44,19 @@
       color: #1f2a44;
     }
 
-    .queue-buttons {
+    .queue-dropdowns {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 20px;
     }
 
-    .queue-buttons button {
+    .queue-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .queue-dropdown select {
       background-color: #3b82f6;
       color: white;
       border: none;
@@ -60,21 +65,30 @@
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
+      transition: background-color 0.2s ease;
+      appearance: none;
+      width: 220px;
+      padding-right: 40px;
     }
 
-    .queue-buttons button:hover {
+    .queue-dropdown select:hover {
       background-color: #2563eb;
-      transform: translateY(-1px);
     }
 
-    .queue-buttons button:active {
-      transform: translateY(0);
-    }
-
-    .queue-buttons button.active {
+    .queue-dropdown select:focus {
+      outline: none;
       background-color: #1e40af;
-      transform: none;
+    }
+
+    .queue-dropdown::after {
+      content: '▼';
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      font-size: 12px;
+      pointer-events: none;
     }
 
     .search-bar {
@@ -233,7 +247,7 @@
       <input type="text" required />
 
       <div class="checkbox-label">
-        <input type="checkbox" id=" moaning" />
+        <input type="checkbox" id="diffSurname" />
         <label for="diffSurname">Child has a different Surname?</label>
       </div>
 
@@ -258,14 +272,61 @@
   <!-- Right: Queues & Table -->
   <div class="right-panel">
     <h2>Queues – Quick Access</h2>
-    <div class="queue-buttons">
-      <button onclick="filterQueue('Recently_Viewed')" class="active">Recently Viewed</button>
-      <button onclick="filterQueue('SC_Not_Booked_7Days')">SC_Not_Booked_7Days</button>
-      <button onclick="filterQueue('Referral_Closure_28Days')">Referral_Closure_28Days</button>
-      <button onclick="filterQueue('CAMHS_OPEN')">CAMHS_Chld_Adolescent</button>
-      <button onclick="filterQueue('G2_Consent_Pending')">G2_Consent_Pending</button>
-      <button onclick="filterQueue('No_Contact_14Days')">No_Contact_14Days</button>
-      <button onclick="filterQueue('Awaiting_Info_SC')">Awaiting_Info_SC</button>
+    <div class="queue-dropdowns">
+      <!-- Red Flag Filters -->
+      <div class="queue-dropdown">
+        <select onchange="filterQueue(this.value)">
+          <option value="" disabled selected>Red Flag Filters</option>
+          <option value="Red_Flag_CAMHS_Concern">Red Flag – CAMHS Concern</option>
+          <option value="Red_Flag_Eating_Disorder">Red Flag – Eating Disorder Concern</option>
+          <option value="Red_Flag_Unable_Attend">Red Flag – Unable to Attend In-Person</option>
+          <option value="Red_Flag_Non_Verbal">Red Flag – Non-Verbal / Child Unable to Speak</option>
+          <option value="Red_Flag_Suicide_Attempt">Red Flag – Suicide Attempt Within 6 Months</option>
+          <option value="Red_Flag_AP_Risk">Red Flag – AP Identified Risk</option>
+        </select>
+      </div>
+
+      <!-- No Contact After Booking Link Sent -->
+      <div class="queue-dropdown">
+        <select onchange="filterQueue(this.value)">
+          <option value="" disabled selected>No Contact (GP Referral)</option>
+          <option value="No_Contact_7_Days">No Contact – 7 Days Since Booking Link Sent</option>
+          <option value="No_Contact_14_Days">No Contact – 14 Days Since Booking Link Sent</option>
+          <option value="No_Contact_21_Days">No Contact – 21 Days Since Booking Link Sent</option>
+          <option value="No_Contact_28_Days">No Contact – 28 Days Since Booking Link Sent – Auto Close</option>
+        </select>
+      </div>
+
+      <!-- Document & Intake Completion -->
+      <div class="queue-dropdown">
+        <select onchange="filterQueue(this.value)">
+          <option value="" disabled selected>Document & Intake</option>
+          <option value="Incomplete_Case">Incomplete Case – Missing Documents or Fields</option>
+        </select>
+      </div>
+
+      <!-- Clinician Decision Outcomes -->
+      <div class="queue-dropdown">
+        <select onchange="filterQueue(this.value)">
+          <option value="" disabled selected>Clinician Decisions</option>
+          <option value="Clinician_Approved_7_Days">Clinician Approved – Last 7 Days</option>
+          <option value="Clinician_Approved_30_Days">Clinician Approved – Last 30 Days</option>
+          <option value="Clinician_Approved_This_Year">Clinician Approved – This Year</option>
+          <option value="Clinician_Rejected_7_Days">Clinician Rejected – Last 7 Days</option>
+          <option value="Clinician_Rejected_30_Days">Clinician Rejected – Last 30 Days</option>
+          <option value="Clinician_Rejected_This_Year">Clinician Rejected – This Year</option>
+          <option value="Clinician_On_Hold_7_Days">Clinician On Hold – Last 7 Days</option>
+          <option value="Clinician_On_Hold_30_Days">Clinician On Hold – Last 30 Days</option>
+          <option value="Clinician_On_Hold_This_Year">Clinician On Hold – This Year</option>
+        </select>
+      </div>
+
+      <!-- Other Queues -->
+      <div class="queue-dropdown">
+        <select onchange="filterQueue(this.value)">
+          <option value="G2_Consent_Pending">G2_Consent_Pending</option>
+        </select>
+      </div>
     </div>
 
     <div class="search-bar">
@@ -374,6 +435,55 @@
           <td>mia.anderson@example.com</td>
           <td>21/07/2025, 12:10</td>
         </tr>
+        <tr data-queue="Red_Flag_CAMHS_Concern" onclick="goToCC('14')">
+          <td>Lucas White</td>
+          <td>+353 445566778</td>
+          <td>PH1247</td>
+          <td>lucas.white@example.com</td>
+          <td>21/07/2025, 11:00</td>
+        </tr>
+        <tr data-queue="Red_Flag_Eating_Disorder" onclick="goToCC('15')">
+          <td>Chloe Green</td>
+          <td>+353 556677889</td>
+          <td>PH1248</td>
+          <td>chloe.green@example.com</td>
+          <td>21/07/2025, 10:45</td>
+        </tr>
+        <tr data-queue="No_Contact_7_Days" onclick="goToCC('16')">
+          <td>Jacob King</td>
+          <td>+353 667788990</td>
+          <td>PH1249</td>
+          <td>jacob.king@example.com</td>
+          <td>21/07/2025, 10:30</td>
+        </tr>
+        <tr data-queue="Incomplete_Case" onclick="goToCC('17')">
+          <td>Harper Lee</td>
+          <td>+353 778899001</td>
+          <td>PH1250</td>
+          <td>harper.lee@example.com</td>
+          <td>21/07/2025, 10:15</td>
+        </tr>
+        <tr data-queue="Clinician_Approved_7_Days" onclick="goToCC('18')">
+          <td>Ella Adams</td>
+          <td>+353 889900112</td>
+          <td>PH1251</td>
+          <td>ella.adams@example.com</td>
+          <td>21/07/2025, 10:00</td>
+        </tr>
+        <tr data-queue="Clinician_Rejected_7_Days" onclick="goToCC('19')">
+          <td>Logan Baker</td>
+          <td>+353 990011223</td>
+          <td>PH1252</td>
+          <td>logan.baker@example.com</td>
+          <td>21/07/2025, 09:45</td>
+        </tr>
+        <tr data-queue="Clinician_On_Hold_7_Days" onclick="goToCC('20')">
+          <td>Lily Carter</td>
+          <td>+353 001122334</td>
+          <td>PH1253</td>
+          <td>lily.carter@example.com</td>
+          <td>21/07/2025, 09:30</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -395,14 +505,6 @@
 
     function filterQueue(queueName) {
       const rows = document.querySelectorAll("#patientTable tbody tr");
-      const buttons = document.querySelectorAll(".queue-buttons button");
-
-      buttons.forEach(button => {
-        button.classList.remove("active");
-        if (button.textContent === queueName) {
-          button.classList.add("active");
-        }
-      });
 
       rows.forEach(row => {
         const queue = row.getAttribute("data-queue");
