@@ -120,6 +120,21 @@
       font-weight: normal;
       font-size: 0.85em;
     }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+      display: block;
+      margin: 20px auto;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
     @media (max-width: 900px) {
       .container {
         grid-template-columns: 1fr;
@@ -127,6 +142,9 @@
       }
       .section {
         padding: 12px;
+      }
+      button {
+        width: 100%;
       }
     }
   </style>
@@ -138,23 +156,23 @@
       <div class="section">
         <h2>Referral & Client Information</h2>
         <div class="section-content">
-          <label>Our Ref</label><input type="text" name="ref">
-          <label>GP Name</label><input type="text" name="gp_name">
-          <label>GP Address</label><textarea name="gp_address"></textarea>
-          <label>Client/Patient Name</label><input type="text" name="client_name">
-          <label>Client/Patient Address</label><textarea name="client_address"></textarea>
-          <label>Date of Birth</label><input type="date" name="dob">
-          <label>Guardian/Mother Name</label><input type="text" name="guardian_name">
-          <label>Contact Number</label><input type="text" name="contact_number">
+          <label>Our Ref</label><input type="text" name="ref" value="PH25-12345">
+          <label>GP Name</label><input type="text" name="gp_name" value="Dr. John Smith">
+          <label>GP Address</label><textarea name="gp_address">123 Health St, Wellness City, WC 12345</textarea>
+          <label>Client/Patient Name</label><input type="text" name="client_name" value="Jane Doe">
+          <label>Client/Patient Address</label><textarea name="client_address">456 Home Rd, Family Town, FT 67890</textarea>
+          <label>Date of Birth</label><input type="date" name="dob" value="2015-06-15">
+          <label>Guardian/Mother Name</label><input type="text" name="guardian_name" value="Mary Doe">
+          <label>Contact Number</label><input type="text" name="contact_number" value="555-123-4567">
         </div>
       </div>
       <div class="section">
         <h2>Assessment Appointment Details</h2>
         <div class="section-content">
-          <label>Date of Assessment</label><input type="date" name="assessment_date">
-          <label>Time of Assessment</label><input type="time" name="assessment_time">
-          <label>Location/Method of Assessment</label><input type="text" name="location_method">
-          <label>Clinician Delivering Assessment</label><input type="text" name="clinician">
+          <label>Date of Assessment</label><input type="date" name="assessment_date" value="2025-08-15">
+          <label>Time of Assessment</label><input type="time" name="assessment_time" value="14:00">
+          <label>Location/Method of Assessment</label><input type="text" name="location_method" value="In-Person at westerngateway building (2.30 - PrimaHealths Office)">
+          <label>Clinician Delivering Assessment</label><input type="text" name="clinician" value="Dr. Sarah Johnson">
         </div>
       </div>
       <div class="section">
@@ -822,6 +840,7 @@
         </div>
       </div>
     </div>
+    <button id="saveButton">Save Information</button>
   </div>
 
   <script>
@@ -831,6 +850,12 @@
         header.classList.toggle('expanded');
         content.classList.toggle('expanded');
       });
+    });
+
+    document.getElementById('saveButton').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('Information saved successfully!');
+      // Add actual save logic here (e.g., send data to server)
     });
   </script>
 </body>

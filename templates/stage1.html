@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1000px; /* Reduced max-width for better readability */
+            max-width: 1000px;
             margin: 20px auto;
             padding: 0 15px;
             background-color: #f5f5f5;
@@ -48,7 +48,8 @@
         textarea,
         select {
             width: 100%;
-            padding: 10px;
+            max-width: 100%;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
@@ -56,7 +57,7 @@
             background-color: #fafafa;
         }
         textarea {
-            height: 80px; /* Slightly reduced height for compactness */
+            height: 100px;
             resize: vertical;
         }
         .radio-group, .checkbox-group {
@@ -106,6 +107,12 @@
             margin-left: 10px;
             width: 200px;
         }
+        .assessment-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
         @media (max-width: 768px) {
             .form-section {
                 grid-template-columns: 1fr;
@@ -122,6 +129,9 @@
                 width: 100%;
                 margin-left: 0;
                 margin-top: 5px;
+            }
+            .assessment-row {
+                grid-template-columns: 1fr;
             }
         }
         @media (max-width: 480px) {
@@ -149,58 +159,51 @@
             <div class="form-section">
                 <div class="form-group">
                     <label for="refNumber">Reference Number (PH25 - )</label>
-                    <input type="text" id="refNumber" name="refNumber" placeholder="Enter Reference Number">
+                    <input type="text" id="refNumber" name="refNumber" value="PH25-12345">
                 </div>
                 <div class="form-group">
                     <label for="gpName">GP Name</label>
-                    <input type="text" id="gpName" name="gpName" placeholder="Enter GP Name">
+                    <input type="text" id="gpName" name="gpName" value="Dr. John Smith">
                 </div>
                 <div class="form-group">
                     <label for="gpAddress">GP Address</label>
-                    <textarea id="gpAddress" name="gpAddress" placeholder="Enter GP Address"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="ccTo">CC to</label>
-                    <select id="ccTo" name="ccTo">
-                        <option value="parents">Parents</option>
-                        <option value="parent">Parent</option>
-                    </select>
+                    <textarea id="gpAddress" name="gpAddress" value="123 Health St, Wellness City, WC 12345"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="clientName">Client/Patient Name</label>
-                    <input type="text" id="clientName" name="clientName" placeholder="Enter Client/Patient Name">
+                    <input type="text" id="clientName" name="clientName" value="Jane Doe">
                 </div>
                 <div class="form-group">
                     <label for="clientAddress">Client/Patient Home Address</label>
-                    <textarea id="clientAddress" name="clientAddress" placeholder="Enter Client/Patient Address"></textarea>
+                    <textarea id="clientAddress" name="clientAddress" value="456 Home Rd, Family Town, FT 67890"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="dob">Date of Birth</label>
-                    <input type="date" id="dob" name="dob">
+                    <input type="date" id="dob" name="dob" value="2015-06-15">
                 </div>
                 <div class="form-group">
                     <label for="guardianName">Guardian/Mother Name</label>
-                    <input type="text" id="guardianName" name="guardianName" placeholder="Enter Guardian/Mother Name">
+                    <input type="text" id="guardianName" name="guardianName" value="Mary Doe">
                 </div>
                 <div class="form-group">
                     <label for="contactNumber">Contact Number</label>
-                    <input type="tel" id="contactNumber" name="contactNumber" placeholder="Enter Contact Number">
+                    <input type="tel" id="contactNumber" name="contactNumber" value="555-123-4567">
                 </div>
                 <div class="form-group">
                     <label for="assessmentDate">Date of Assessment</label>
-                    <input type="date" id="assessmentDate" name="assessmentDate">
+                    <input type="date" id="assessmentDate" name="assessmentDate" value="2025-08-01">
                 </div>
                 <div class="form-group">
                     <label for="assessmentTime">Time of Assessment</label>
-                    <input type="time" id="assessmentTime" name="assessmentTime">
+                    <input type="time" id="assessmentTime" name="assessmentTime" value="10:00">
                 </div>
                 <div class="form-group">
                     <label for="assessmentLocation">Location/Method of Assessment</label>
-                    <input type="text" id="assessmentLocation" name="assessmentLocation" placeholder="Enter Location/Method">
+                    <input type="text" id="assessmentLocation" name="assessmentLocation" value="On call">
                 </div>
                 <div class="form-group">
                     <label for="clinician">Clinician Delivering Assessment</label>
-                    <input type="text" id="clinician" name="clinician" placeholder="Enter Clinician Name">
+                    <input type="text" id="clinician" name="clinician" value="Dr. Sarah Johnson">
                 </div>
             </div>
 
@@ -365,7 +368,7 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="developmentalMilestones">Developmental Milestones</label>
-                    <textarea id="developmentalMilestones" name="developmentalMilestones" placeholder="Enter developmental milestones (e.g., walking, talking)"></textarea></textarea>
+                    <textarea id="developmentalMilestones" name="developmentalMilestones" placeholder="Enter developmental milestones (e.g., walking, talking)"></textarea>
                 </div>
             </div>
 
@@ -383,21 +386,25 @@
             <div class="form-section">
                 <div class="form-group full-width">
                     <label>Additional Assessments/Investigations to Consider</label>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="assessments" value="ot"> OT</label>
-                        <textarea name="otDetails" placeholder="Details if OT selected"></textarea>
+                    <div class="assessment-row">
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="assessments" value="ot"> OT</label>
+                            <textarea name="otDetails" placeholder="Details if OT selected"></textarea>
+                        </div>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="assessments" value="slt"> SLT</label>
+                            <textarea name="sltDetails" placeholder="Details if SLT selected"></textarea>
+                        </div>
                     </div>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="assessments" value="slt"> SLT</label>
-                        <textarea name="sltDetails" placeholder="Details if SLT selected"></textarea>
-                    </div>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="assessments" value="cognitive"> Cognitive</label>
-                        <textarea name="cognitiveDetails" placeholder="Details if Cognitive selected"></textarea>
-                    </div>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="assessments" value="other"> Other</label>
-                        <textarea name="otherAssessmentDetails" placeholder="Details if Other selected"></textarea>
+                    <div class="assessment-row">
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="assessments" value="cognitive"> Cognitive</label>
+                            <textarea name="cognitiveDetails" placeholder="Details if Cognitive selected"></textarea>
+                        </div>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="assessments" value="other"> Other</label>
+                            <textarea name="otherAssessmentDetails" placeholder="Details if Other selected"></textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
