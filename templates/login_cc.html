@@ -275,8 +275,8 @@
     <div class="queue-dropdowns">
       <!-- Red Flag Filters -->
       <div class="queue-dropdown">
-        <select onchange="filterQueue(this.value)">
-          <option value="" disabled selected>Red Flag Filters</option>
+        <select onchange="filterQueue(this, this.value)">
+          <option value="" disabled selected>Select Red Flag Filter</option>
           <option value="Red_Flag_CAMHS_Concern">Red Flag – CAMHS Concern</option>
           <option value="Red_Flag_Eating_Disorder">Red Flag – Eating Disorder Concern</option>
           <option value="Red_Flag_Unable_Attend">Red Flag – Unable to Attend In-Person</option>
@@ -288,8 +288,8 @@
 
       <!-- No Contact After Booking Link Sent -->
       <div class="queue-dropdown">
-        <select onchange="filterQueue(this.value)">
-          <option value="" disabled selected>No Contact (GP Referral)</option>
+        <select onchange="filterQueue(this, this.value)">
+          <option value="" disabled selected>Select No Contact Filter</option>
           <option value="No_Contact_7_Days">No Contact – 7 Days Since Booking Link Sent</option>
           <option value="No_Contact_14_Days">No Contact – 14 Days Since Booking Link Sent</option>
           <option value="No_Contact_21_Days">No Contact – 21 Days Since Booking Link Sent</option>
@@ -299,16 +299,16 @@
 
       <!-- Document & Intake Completion -->
       <div class="queue-dropdown">
-        <select onchange="filterQueue(this.value)">
-          <option value="" disabled selected>Document & Intake</option>
+        <select onchange="filterQueue(this, this.value)">
+          <option value="" disabled selected>Select Document & Intake Filter</option>
           <option value="Incomplete_Case">Incomplete Case – Missing Documents or Fields</option>
         </select>
       </div>
 
       <!-- Clinician Decision Outcomes -->
       <div class="queue-dropdown">
-        <select onchange="filterQueue(this.value)">
-          <option value="" disabled selected>Clinician Decisions</option>
+        <select onchange="filterQueue(this, this.value)">
+          <option value="" disabled selected>Select Clinician Decision</option>
           <option value="Clinician_Approved_7_Days">Clinician Approved – Last 7 Days</option>
           <option value="Clinician_Approved_30_Days">Clinician Approved – Last 30 Days</option>
           <option value="Clinician_Approved_This_Year">Clinician Approved – This Year</option>
@@ -323,7 +323,8 @@
 
       <!-- Other Queues -->
       <div class="queue-dropdown">
-        <select onchange="filterQueue(this.value)">
+        <select onchange="filterQueue(this, this.value)">
+          <option value="" disabled selected>Select Other Queue</option>
           <option value="G2_Consent_Pending">G2_Consent_Pending</option>
         </select>
       </div>
@@ -503,18 +504,38 @@
       });
     }
 
-    function filterQueue(queueName) {
+    function filterQueue(selectedDropdown, queueName) {
       const rows = document.querySelectorAll("#patientTable tbody tr");
+      const allDropdowns = document.querySelectorAll(".queue-dropdown select");
 
+      // Reset all other dropdowns to their default (no selection) state
+      allDropdowns.forEach(dropdown => {
+        if (dropdown !== selectedDropdown) {
+          dropdown.value = "";
+        }
+      });
+
+      // If no queue is selected (empty value), show all rows
+      if (!queueName) {
+        rows.forEach(row => {
+          row.style.display = "";
+        });
+        return;
+      }
+
+      // Filter rows based on the selected queue
       rows.forEach(row => {
         const queue = row.getAttribute("data-queue");
-        row.style.display = (queue === queueName) ? "" : "none";
+        row.style.display = queue === queueName ? "" : "none";
       });
     }
 
-    // Initialize with Recently Viewed Leads
+    // Initialize with all rows visible (no filter applied)
     document.addEventListener("DOMContentLoaded", () => {
-      filterQueue("Recently_Viewed");
+      const rows = document.querySelectorAll("#patientTable tbody tr");
+      rows.forEach(row => {
+        row.style.display = "";
+      });
     });
   </script>
 
