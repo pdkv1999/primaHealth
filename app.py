@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash
+import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -116,4 +117,5 @@ def do_logout():
 # -----------------------------------------------------
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5050))  # Render will inject PORT
+    app.run(host='0.0.0.0', port=port)
