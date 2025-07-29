@@ -86,6 +86,10 @@ def stage3():
 def stage4():
     return render_template('stage4.html')
 
+@app.route('/phase2/receipt')
+def receipt():
+    return render_template('receipt.html')
+
 @app.route('/phase2/stage4/under12')
 def under12():
     return render_template('under12.html')
