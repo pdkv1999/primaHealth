@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime, timedelta
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -9,25 +10,26 @@ doctor_notes = []
 
 SESSION_TIMEOUT = 300  # 5 minutes in seconds
 
+# -------- ADMIN LOGIN CREDENTIALS (ENCRYPTED PASSWORD) --------
+ADMIN_USERNAME = 'primahealth'
+# Hash for password: "primahealth25"
+ADMIN_PASSWORD_HASH = 'scrypt:32768:8:1$PgHBXxvv2705ES59$b852a704ca8a770eb59e5e79b262c338aaa443687f464e583bedbebc3a8bdac6d8558875870711cc5a52700bf32790e22993e0ed9445b8bc1aaa858d5ed3241b'
+
 # -------- GLOBAL LOGIN + TIMEOUT CHECK --------
 @app.before_request
 def require_login_and_timeout():
     allowed_routes = ['admin_login', 'admin_auth', 'do_logout', 'static']
     if request.endpoint not in allowed_routes:
-        # Check login
         if 'admin_user' not in session:
             return redirect(url_for('admin_login'))
 
-        # Check session timeout
         last_active = session.get('last_active')
         if last_active:
             last_active_time = datetime.strptime(last_active, '%Y-%m-%d %H:%M:%S')
             if datetime.utcnow() - last_active_time > timedelta(seconds=SESSION_TIMEOUT):
-                session.pop('admin_user', None)
-                session.pop('last_active', None)
+                session.clear()
                 return redirect(url_for('admin_login'))
 
-        # Update last_active timestamp
         session['last_active'] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 
 # ------------------- MAIN ROUTES -------------------
@@ -100,7 +102,7 @@ def admin_login():
 def admin_auth():
     username = request.form.get('username')
     password = request.form.get('password')
-    if username == 'primahealth' and password == 'primahealth25':
+    if username == ADMIN_USERNAME and check_password_hash(ADMIN_PASSWORD_HASH, password):
         session['admin_user'] = username
         session['last_active'] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
         return redirect(url_for('index'))
