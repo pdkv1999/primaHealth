@@ -4,60 +4,176 @@
     <meta charset="UTF-8">
     <title>Final Report – Over 12s</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
         body {
-            font-family: Georgia, serif;
+            font-family: 'Inter', sans-serif;
             margin: 40px;
             line-height: 1.6;
             white-space: pre-wrap;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            color: #2d3748;
+        }
+        h2 {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
         }
         .editable {
-            background-color: #ffffcc;
+            background-color: rgba(255, 255, 0, 0.2);
             cursor: pointer;
-            padding: 2px 4px;
-            border-radius: 4px;
+            padding: 2px 6px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        .editable:hover {
+            background-color: rgba(255, 255, 0, 0.4);
         }
         .input-popup {
             display: none;
             position: absolute;
-            background: white;
-            border: 1px solid #ccc;
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 15px;
             z-index: 10;
-            width: 300px;
+            width: 320px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            color: #1a202c;
+        }
+        .input-popup label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .input-popup textarea {
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            padding: 8px;
+            resize: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .input-popup button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        .input-popup button:first-of-type {
+            background: #4a90e2;
+            color: white;
+        }
+        .input-popup button:first-of-type:hover {
+            background: #357abd;
+        }
+        .input-popup button:last-of-type {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+        .input-popup button:last-of-type:hover {
+            background: #e2e8f0;
         }
         table {
             border-collapse: collapse;
             width: 100%;
             margin-bottom: 20px;
-            border: 1px solid #000;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         table td, table th {
-            border: 1px solid #000;
-            padding: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
             text-align: left;
+        }
+        th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #1a202c;
+        }
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        tr:hover {
+            background: #edf2f7;
         }
         .button-container {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-top: 40px;
+            flex-wrap: wrap;
         }
         .action-button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 16px;
-            width: 200px;
+            font-weight: 500;
             text-align: center;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #1a202c;
             cursor: pointer;
-            border: 1px solid #000;
-            border-radius: 4px;
-            background-color: #f8f8f8;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 180px;
+            max-width: 220px;
         }
         .action-button:hover {
-            background-color: #e0e0e0;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        .action-button:active {
+            transform: translateY(0);
         }
         #reportContent {
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 4px;
+            border: none;
+            padding: 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s ease;
+        }
+        #reportContent:hover {
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+        }
+        /* Hide buttons and popup when printing */
+        @media print {
+            .button-container, .input-popup {
+                display: none !important;
+            }
+            body {
+                background: white;
+                margin: 0;
+            }
+            #reportContent {
+                border: none;
+                padding: 0;
+                box-shadow: none;
+            }
+            .editable {
+                background-color: transparent;
+                border: none;
+                padding: 0;
+            }
+        }
+        @media (max-width: 600px) {
+            .button-container {
+                flex-direction: column;
+            }
+            .action-button {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -196,7 +312,7 @@
 <div class="button-container">
     <button class="action-button" onclick="saveReport()">💾 Save Final Report</button>
     <button class="action-button" onclick="previewReport()">👁️ Preview Report</button>
-    <button class="action-button" onclick="window.print()">🖨️ Print to PDF</button>
+    <button class="action-button" onclick="printReport()">🖨️ Print to PDF</button>
     <button class="action-button" onclick="sendEmail()">📧 Send Encrypted Email to G1</button>
 </div>
 
@@ -234,10 +350,14 @@
     function previewReport() {
         let content = document.getElementById("reportContent").innerHTML;
         let newWin = window.open("", "_blank");
-        newWin.document.write("<html><head><title>Report Preview</title><style>body{font-family:Georgia,serif;margin:40px;line-height:1.6;}table{border-collapse:collapse;width:100%;}table td,table th{border:1px solid #000;padding:8px;}</style></head><body>");
+        newWin.document.write("<html><head><title>Report Preview</title><style>body{font-family:'Inter',sans-serif;margin:40px;line-height:1.6;color:#2d3748;}table{border-collapse:collapse;width:100%;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);}td,th{border:1px solid #e2e8f0;padding:12px;}th{background:#f7fafc;font-weight:600;color:#1a202c;}tr:nth-child(even){background:#f9fafb;}</style></head><body>");
         newWin.document.write(content);
         newWin.document.write("</body></html>");
         newWin.document.close();
+    }
+
+    function printReport() {
+        window.print();
     }
 
     function sendEmail() {
