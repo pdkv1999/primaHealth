@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowchart Display</title>
+  <!-- Include Mermaid.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: #f0f0f0;
+      overflow: auto;
+    }
+    #mermaidChart {
+      width: 100%;
+      height: auto;
+      padding: 20px;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    .mermaid {
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+      font-size: 16px; /* Increase font size for better readability */
+    }
+    svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="mermaidChart">
+    <pre class="mermaid">
+      flowchart TD
+        %% ------------------------- Stage 1: Contact Intake -------------------------
+        Start(["Start: New Enquiry\n(Phone, Email, GP Referral, Webform, Callback, WhatsApp)"]) --> ContactMethod{"What is the source?"}
+
+        ContactMethod -->|"Phone Call"| T1["Send: Phone call received (No SC No GP Referral)"]
+        ContactMethod -->|"Voicemail"| T2["Send: Missed Call (Voicemail)"]
+        ContactMethod -->|"No Voicemail"| T3["Send: Missed Call (No Voicemail)"]
+        ContactMethod -->|"Callback Request"| T4["Send: Callback Request"]
+        ContactMethod -->|"Email"| T5["Send: Email Request (Attach Parent Info)"]
+        ContactMethod -->|"GP Referral only"| T6["Send: GP Referral Received (No Screening Call done)"]
+        ContactMethod -->|"Webform"| CheckDup
+
+        T1 --> CheckDup
+        T2 --> CheckDup
+        T3 --> CheckDup
+        T4 --> CheckDup
+        T5 --> CheckDup
+        T6 --> CheckDup
+
+        CheckDup -->|"Existing record"| LoadRec["Load Patient Record"] --> ConsentCheck["Check if WhatsApp Consent Exists"]
+        CheckDup -->|"New record"| CreateRec["Create Patient Record"] --> CaptureConsent["Capture WhatsApp Consent"] --> WaitSCIntro
+
+        ConsentCheck -->|"Consent Exists"| WaitSCIntro
+        ConsentCheck -->|"Consent Missing"| CaptureConsent
+
+        %% ------------------------- Route A: Waiting for SC Booking -------------------------
+        WaitSCIntro["Route A: Invite for Screening Call"] --> T8["Send: GP Referral Received, Haven’t booked SC"]
+        T8 -->|"7 Days No Response"| T14["Send: No contact 7-days - Follow up"]
+        T14 -->|"7 More Days No Response"| T15["Send: No contact 14-days - Follow up"]
+        T15 -->|"No Response"| CloseCase1["Sad End: Auto-Close - No Booking"]
+        T15 -->|"SC Booked"| T9["Send: Screening Call Booked"] --> Step3
+        T14 -->|"SC Booked"| T9
+
+        %% ------------------------- Route B: Screening Call Completed -------------------------
+        Step3["Step 3: Screening Call Completed"]
+        T9 --> Step3
+
+        Step3 -->|"G1 provided 2 child names"| T7["Send: Screening Call Slot Booked – Two Children’s Names Provided"]
+        Step3 -->|"No GP Referral"| T10["Send: Screening call complete, No GP referral"]
+        Step3 -->|"GP Referral not yet received"| T11["Send: Screening Call Completed, No GP Referral Yet"]
+        Step3 -->|"GP Referral Received, No Reports"| T12["Send: Screening Call Completed, GP Referral Received, No Previous Report(s) Yet"]
+        Step3 -->|"Need both docs"| T13["Send: Screening Call Completed (Send on Previous reports & GP Referral)"]
+
+        T10 --> DocWait
+        T11 --> DocWait
+        T12 --> DocWait
+        T13 --> DocWait
+
+        %% ------------------------- Route C: Document Collection + Reminders -------------------------
+        DocWait["Route C: Awaiting Docs (Referral/Reports)"] -->|"7 Days No Response"| T22["Send: No contact 7-days - Follow up"]
+        T22 -->|"7 More Days No Response"| T23["Send: No contact 14-days - Follow up"]
+        T23 -->|"No Response"| CloseCase2["Sad End: Auto-Close - Missing Docs"]
+        T23 -->|"Docs Received"| ConsentG2
+
+        %% ------------------------- Step 4: G2 Consent -------------------------
+        ConsentG2["Step 4: Is G2 Consent Required?"] -->|"Yes"| T16["Send: G2 Consent Required (Screening Call done & GP Referral Received)"]
+        T16 --> T17["Send: Follow-up WA re. G2 consent for assessment"] --> T18["Send: G2 Consent Received (Screening Call done)"] --> PreAssessment
+        ConsentG2 -->|"No"| PreAssessment
+
+        %% ------------------------- Step 5: Pre-Assessment Checklist -------------------------
+        PreAssessment["Step 5: Checklist: Ready for Clinician Review?"] -->|"Need school email"| T19["Send: Follow-up School’s Email Address for Conners Questionnaire"]
+        PreAssessment -->|"Need parent/self forms"| T20["Send: Follow-Up on Conners Questionnaires"]
+        PreAssessment --> Clinician
+
+        %% ------------------------- Step 6: Clinician Review -------------------------
+        Clinician["Step 6: Clinician Review"] --> Decision{"Clinician Decision"}
+        Decision -->|"Accepted"| NotifyAccepted["Send: GP Referral Received (Screening Call done)"] --> Assessment
+        Decision -->|"Rejected"| RejectNotify["Notify GP + G1 (Manual)"] --> CloseCase3["Sad End: Rejected"]
+        Decision -->|"On Hold"| HoldCase["Status: Await Info"]
+
+        %% ------------------------- Step 7: Final Notification -------------------------
+        Assessment["Assessment Ready"] --> T21["Send: Secondary Assessment Notification"] --> End["Happy End"]
+
+        %% ------------------------- Labels -------------------------
+        classDef message fill:#fdf6e3,stroke:#586e75,stroke-width:1px;
+        class T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23 message;
+    </pre>
+  </div>
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true,
+        padding: 10
+      }
+    });
+  </script>
+</body>
+</html>
