@@ -13,9 +13,9 @@
             background-size: cover;
             min-height: 100vh;
             margin: 0;
-            padding-top: 80px;
-            font-family: Arial, sans-serif;
-            color: #111;
+            padding-top: 100px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1a1a1a;
             position: relative;
         }
 
@@ -23,50 +23,138 @@
             content: "";
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255, 255, 255, 0.6);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(240, 248, 255, 0.8));
             z-index: -1;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.85);
-            padding: 3rem 2rem;
-            border-radius: 15px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a3c6d;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.025em;
         }
 
         .btn-outline-info {
-            width: 180px;
+            width: 200px;
             margin: 1rem;
-            border-radius: 25px;
+            border-radius: 50px;
             font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #0dcaf0;
+            color: #0dcaf0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-info:hover {
+            background: #0dcaf0;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background: linear-gradient(90deg, #ffffff, #f8f9fa);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            color: #1a3c6d !important;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            color: #0dcaf0 !important;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease, background 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #0dcaf0;
+            background: rgba(13, 202, 240, 0.1);
+            border-radius: 8px;
+        }
+
+        .dropdown-menu {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            background: #fff;
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-item {
+            font-weight: 500;
+            color: #2c3e50;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #0dcaf0;
+            color: #fff;
         }
 
         /* Show dropdown on hover */
         .dropdown:hover .dropdown-menu {
             display: block;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
-        .navbar .nav-link {
-            font-weight: 600;
-        }
         .dropdown-submenu .dropdown-menu {
             display: none;
             margin-left: 0.1rem;
+            border-radius: 10px;
         }
 
         .dropdown-submenu:hover .dropdown-menu {
             display: block;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
+        .btn-outline-danger {
+            border-radius: 50px;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            background: #dc3545;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Animation for dropdown */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -105,11 +193,21 @@
                     <li><a class="dropdown-item" href="/phase2/receipt">Receipt</a></li>
                 </ul>
             </li>
-            
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button">Phase 3</a>
+                <ul class="dropdown-menu">
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button">Phase 4</a>
+                <ul class="dropdown-menu">
+                </ul>
+            </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="/consent">WA Guardian Consent</a>
-            </li>
+                <a class="nav-link" href="/consent">WA Guardian Consent</a></li>
         </ul>
 
         <a href="/do_logout" class="btn btn-outline-danger">Logout</a>
