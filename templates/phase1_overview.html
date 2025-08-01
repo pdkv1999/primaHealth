@@ -1,33 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flowchart Display</title>
-  <!-- Include Mermaid.js from CDN -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Phase 1 Overview Flowchart</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      height: 100vh;
-      width: 100vw;
-      background-color: #f0f0f0;
-      overflow: auto;
+      background-color: #f8f9fa;
     }
     #mermaidChart {
-      width: 100%;
-      height: auto;
       padding: 20px;
-      margin: 0;
-      box-sizing: border-box;
+      background-color: #fff;
+      overflow-x: auto;
     }
     .mermaid {
-      margin: 0 auto;
-      max-width: 100%;
-      height: auto;
-      font-size: 16px; /* Increase font size for better readability */
+      font-size: 16px;
     }
     svg {
       max-width: 100% !important;
@@ -38,86 +29,102 @@
 <body>
   <div id="mermaidChart">
     <pre class="mermaid">
-      flowchart TD
-        %% ------------------------- Stage 1: Contact Intake -------------------------
-        Start(["Start: New Enquiry\n(Phone, Email, GP Referral, Webform, Callback, WhatsApp)"]) --> ContactMethod{"What is the source?"}
+{% raw %}
+flowchart TD
+    Start(["Start: New Enquiry<br>(Phone, Email, GP Referral, Webform, Callback, WhatsApp)"]) --> Source{"What is the source?"}
 
-        ContactMethod -->|"Phone Call"| T1["Send: Phone call received (No SC No GP Referral)"]
-        ContactMethod -->|"Voicemail"| T2["Send: Missed Call (Voicemail)"]
-        ContactMethod -->|"No Voicemail"| T3["Send: Missed Call (No Voicemail)"]
-        ContactMethod -->|"Callback Request"| T4["Send: Callback Request"]
-        ContactMethod -->|"Email"| T5["Send: Email Request (Attach Parent Info)"]
-        ContactMethod -->|"GP Referral only"| T6["Send: GP Referral Received (No Screening Call done)"]
-        ContactMethod -->|"Webform"| CheckDup
+    Source -- Phone Call --> M1["Send: Phone call received (No SC No GP Referral)<br><sub>📝 WA if consented, else Email</sub>"]
+    Source -- Voicemail --> M2["Send: Missed Call (Voicemail)<br><sub>📝 Email</sub>"]
+    Source -- No Voicemail --> M3["Send: Missed Call (No Voicemail)<br><sub>📝 Email</sub>"]
+    Source -- Callback --> M4["Send: Callback Request<br><sub>📝 WA if consented, else Email</sub>"]
+    Source -- Email --> M5["Send: Email Request (Attach Parent Info)<br><sub>📝 Email</sub>"]
+    Source -- GP Referral --> M6["Send: GP Referral Received (No Screening Call done)<br><sub>📝 Email</sub>"]
+    Source -- Webform --> CheckDup{"Is it an existing record?"}
 
-        T1 --> CheckDup
-        T2 --> CheckDup
-        T3 --> CheckDup
-        T4 --> CheckDup
-        T5 --> CheckDup
-        T6 --> CheckDup
+    M1 --> CheckDup
+    M2 --> CheckDup
+    M3 --> CheckDup
+    M4 --> CheckDup
+    M5 --> CheckDup
+    M6 --> CheckDup
 
-        CheckDup -->|"Existing record"| LoadRec["Load Patient Record"] --> ConsentCheck["Check if WhatsApp Consent Exists"]
-        CheckDup -->|"New record"| CreateRec["Create Patient Record"] --> CaptureConsent["Capture WhatsApp Consent"] --> WaitSCIntro
+    CheckDup -- Yes --> LoadRec["Load Patient Record"]
+    LoadRec --> ConsentCheck["Check: WhatsApp Consent Exists"]
 
-        ConsentCheck -->|"Consent Exists"| WaitSCIntro
-        ConsentCheck -->|"Consent Missing"| CaptureConsent
+    CheckDup -- No --> CreateRec["Create Patient Record"]
+    CreateRec --> ConsentCheck
+    ConsentCheck -- No --> M0["Send: WA Consent Request<br><sub>📝 Email</sub>"]
+    ConsentCheck --> GPCheck{"Is GP Referral Received?"}
 
-        %% ------------------------- Route A: Waiting for SC Booking -------------------------
-        WaitSCIntro["Route A: Invite for Screening Call"] --> T8["Send: GP Referral Received, Haven’t booked SC"]
-        T8 -->|"7 Days No Response"| T14["Send: No contact 7-days - Follow up"]
-        T14 -->|"7 More Days No Response"| T15["Send: No contact 14-days - Follow up"]
-        T15 -->|"No Response"| CloseCase1["Sad End: Auto-Close - No Booking"]
-        T15 -->|"SC Booked"| T9["Send: Screening Call Booked"] --> Step3
-        T14 -->|"SC Booked"| T9
+    GPCheck -- Yes --> M19["Send: GP Referral Received, Haven’t booked SC<br><sub>📝 WA if consented, else Email</sub>"]
+    M19 --> SCBookedNow{"Is Screening Call Already Booked?"}
+    GPCheck -- No --> SCBookedNow
 
-        %% ------------------------- Route B: Screening Call Completed -------------------------
-        Step3["Step 3: Screening Call Completed"]
-        T9 --> Step3
+    SCBookedNow -- Yes --> M9["Send: Screening Call Booked<br><sub>📝 WA if consented, else Email</sub>"]
+    SCBookedNow -- No --> WaitMore["WaitMore"]
 
-        Step3 -->|"G1 provided 2 child names"| T7["Send: Screening Call Slot Booked – Two Children’s Names Provided"]
-        Step3 -->|"No GP Referral"| T10["Send: Screening call complete, No GP referral"]
-        Step3 -->|"GP Referral not yet received"| T11["Send: Screening Call Completed, No GP Referral Yet"]
-        Step3 -->|"GP Referral Received, No Reports"| T12["Send: Screening Call Completed, GP Referral Received, No Previous Report(s) Yet"]
-        Step3 -->|"Need both docs"| T13["Send: Screening Call Completed (Send on Previous reports & GP Referral)"]
+    WaitMore -- 7 Days No Response --> M7["Send: No contact 7-days - Follow up<br><sub>📝 WA if consented, else Email</sub>"]
+    M7 -- 7 More Days No Response --> M8["Send: No contact 14-days - Follow up<br><sub>📝 WA if consented, else Email</sub>"]
+    M8 -- No Response --> Close1["Sad End: Auto-Close – No Booking"]
+    M8 -- SC Booked --> M9
 
-        T10 --> DocWait
-        T11 --> DocWait
-        T12 --> DocWait
-        T13 --> DocWait
+    M9 --> ChildCheck["Two Children's Names Provided?"]
+    ChildCheck -- Yes --> M20["Send: Screening Call Slot Booked - Two Children’s Names Provided<br><sub>📝 WA if consented, else Email</sub>"]
+    M20 --> SCBookedNow
+    M20 --> APAssign["Assign to AP Calendar Queue"]
+    ChildCheck -- No --> APAssign
 
-        %% ------------------------- Route C: Document Collection + Reminders -------------------------
-        DocWait["Route C: Awaiting Docs (Referral/Reports)"] -->|"7 Days No Response"| T22["Send: No contact 7-days - Follow up"]
-        T22 -->|"7 More Days No Response"| T23["Send: No contact 14-days - Follow up"]
-        T23 -->|"No Response"| CloseCase2["Sad End: Auto-Close - Missing Docs"]
-        T23 -->|"Docs Received"| ConsentG2
+    APAssign --> APExec["AP Executes Screening Call (Phone)"]
+    APExec --> CheckSchoolFields{"Are School Name, Email, or Teacher Name missing in CRM?"}
+    CheckSchoolFields -- Yes --> MFollowSchool["Send: Follow-up School Details after SC execution by AP<br><sub>📝 WA if consented, else Email</sub>"]
+    CheckSchoolFields -- No --> GPCheck2{"Is GP Referral Received?"}
+    MFollowSchool --> GPCheck2
 
-        %% ------------------------- Step 4: G2 Consent -------------------------
-        ConsentG2["Step 4: Is G2 Consent Required?"] -->|"Yes"| T16["Send: G2 Consent Required (Screening Call done & GP Referral Received)"]
-        T16 --> T17["Send: Follow-up WA re. G2 consent for assessment"] --> T18["Send: G2 Consent Received (Screening Call done)"] --> PreAssessment
-        ConsentG2 -->|"No"| PreAssessment
+    GPCheck2 -- No --> M21a["Send: Screening Call Completed, No GP Referral Yet<br><sub>📝 WA if consented, else Email</sub>"]
+    M21a --> FlagCheck{"Red Flags Identified?"}
+    GPCheck2 -- Yes --> InfoCheck{"Any missing documents?"}
 
-        %% ------------------------- Step 5: Pre-Assessment Checklist -------------------------
-        PreAssessment["Step 5: Checklist: Ready for Clinician Review?"] -->|"Need school email"| T19["Send: Follow-up School’s Email Address for Conners Questionnaire"]
-        PreAssessment -->|"Need parent/self forms"| T20["Send: Follow-Up on Conners Questionnaires"]
-        PreAssessment --> Clinician
+    FlagCheck -- Yes --> RedList["Red Flag Types:<br>• CAMHS<br>• Eating Disorder<br>• Non-Verbal Child<br>• Suicide Attempts<br>• Can't Attend In-Person<br>• AP Clinical Concern"]
+    RedList --> EscalateFlag["Flag to CC: Manual Review Required"]
+    EscalateFlag --> CloseRedFlag["Sad End: Red Flag – Do Not Proceed"]
 
-        %% ------------------------- Step 6: Clinician Review -------------------------
-        Clinician["Step 6: Clinician Review"] --> Decision{"Clinician Decision"}
-        Decision -->|"Accepted"| NotifyAccepted["Send: GP Referral Received (Screening Call done)"] --> Assessment
-        Decision -->|"Rejected"| RejectNotify["Notify GP + G1 (Manual)"] --> CloseCase3["Sad End: Rejected"]
-        Decision -->|"On Hold"| HoldCase["Status: Await Info"]
+    FlagCheck -- No --> InfoCheck
 
-        %% ------------------------- Step 7: Final Notification -------------------------
-        Assessment["Assessment Ready"] --> T21["Send: Secondary Assessment Notification"] --> End["Happy End"]
+    InfoCheck -- Yes --> M22a["Send: Screening Call Completed, GP Referral Received, No Previous Report(s) Yet<br><sub>📝 WA if consented, else Email</sub>"]
+    M22a --> DocWait["Wait for Docs"]
+    DocWait -- 14 Days --> DocReceived{"Docs Received?"}
+    DocReceived -- No --> EscalateMissing["Flag to CC: Missing Docs (Manual Escalation)"]
+    EscalateMissing --> Close2["Sad End: Auto-Close – Missing Docs"]
+    DocReceived -- Yes --> G2Check{"Is G2 Consent Required?"}
 
-        %% ------------------------- Labels -------------------------
-        classDef message fill:#fdf6e3,stroke:#586e75,stroke-width:1px;
-        class T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23 message;
+    InfoCheck -- No --> G2Check
+    G2Check -- Yes --> M12["Send: G2 Consent Required (Screening Call done &amp; GP Referral Received)<br><sub>📝 WA if consented, else Email</sub>"]
+    M12 --> M13["Send: Follow-up WA re. G2 consent for assessment<br><sub>📝 WA if consented, else Email</sub>"]
+    M13 --> M14["Send: G2 Consent Received (Screening Call done)<br><sub>📝 WA if consented, else Email</sub>"]
+
+    G2Check -- No --> CMReview["Care Manager Review"]
+    M14 --> CMReview
+
+    CMReview --> Decision{"Care Manager Decision"}
+    Decision -- Accepted --> M17["Send: GP Referral Received (Screening Call done)<br><sub>📝 WA if consented, else Email</sub>"]
+    M17 --> FinalPrep["Assessment Ready"]
+    FinalPrep --> M18["Send: Secondary Assessment Notification<br><sub>📝 WA if consented, else Email</sub>"]
+    M18 --> HappyEnd["Happy End: Proceed to Assessment"]
+
+    Decision -- Rejected --> RejectNotify["Notify GP + G1 (Manual)"]
+    RejectNotify --> Close3["Sad End: Rejected"]
+    Decision -- On Hold --> HoldStatus["Status: Awaiting Additional Info"]
+
+    %% Styling
+    class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9,M12,M13,M14,M17,M18,M19,M20,M21a,M22a,MFollowSchool message
+    class Close1,Close2,Close3,CloseRedFlag sadend
+    classDef message fill:#fff8dc,stroke:#b8860b,stroke-width:1px
+    classDef sadend fill:#ffe6e6,stroke:#cc0000,stroke-width:1px
+    classDef fieldcheck fill:#e6f7ff,stroke:#1890ff,stroke-width:1px
+{% endraw %}
     </pre>
   </div>
   <script>
-    // Initialize Mermaid
     mermaid.initialize({
       startOnLoad: true,
       theme: 'default',
