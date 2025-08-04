@@ -290,12 +290,12 @@
       <div class="queue-dropdown">
         <select onchange="filterQueue(this, this.value)">
           <option value="" disabled selected>Select No Contact Filter</option>
-          <option value="No_Contact_7_Days">No Contact – 7 Days Since Booking Link Sent</option>
-          <option value="No_Contact_14_Days">No Contact – 14 Days Since Booking Link Sent</option>
-          <option value="No_Contact_21_Days">No Contact – 21 Days Since Booking Link Sent</option>
-          <option value="No_Contact_28_Days">No Contact – 28 Days Since Booking Link Sent – Auto Close</option>
+          <option value="No_Contact_7_Days">No SC, No GP referral since 7 days</option>
+          <option value="No_Contact_14_Days">No SC, No GP referral since 14 days</option>
+          <option value="No_Contact_21_Days">No SC, No GP referral since 21 days</option>
+          <option value="No_Contact_28_Days">No SC, No GP referral since 28 days – Auto Close</option>
         </select>
-      </div>
+      </div>      
 
       <!-- Document & Intake Completion -->
       <div class="queue-dropdown">
@@ -324,9 +324,10 @@
       <!-- Other Queues -->
       <div class="queue-dropdown">
         <select onchange="filterQueue(this, this.value)">
-          <option value="" disabled selected>Select Other Queue</option>
+          <option value="" disabled selected>High priority Queue</option>
           <option value="G2_Consent_Pending">G2_Consent_Pending</option>
           <option value="G2_Consent_Pending">Nearing 18 & Under Medication</option>
+          <option value="GP_Referral_No_SC_7_Days">GP referral received, No SC since 7 days</option>
         </select>
       </div>
     </div>
