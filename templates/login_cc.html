@@ -47,13 +47,14 @@
     .queue-dropdowns {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 16px;
+      margin-bottom: 8px; /* Small space below filters */
     }
 
     .queue-dropdown {
       position: relative;
       display: inline-block;
+      flex-basis: 24%; /* Approximately 25% width for 4 filters in a row, adjusted for gap */
     }
 
     .queue-dropdown select {
@@ -67,8 +68,9 @@
       cursor: pointer;
       transition: background-color 0.2s ease;
       appearance: none;
-      width: 220px;
+      width: 100%;
       padding-right: 40px;
+      box-sizing: border-box;
     }
 
     .queue-dropdown select:hover {
@@ -153,7 +155,6 @@
       cursor: pointer;
     }
 
-    /* Lead form styles */
     .form-title {
       font-weight: 600;
       margin-bottom: 20px;
@@ -232,8 +233,6 @@
   </style>
 </head>
 <body>
-
-  <!-- Left: Lead Form -->
   <div class="left-panel">
     <div class="form-title">Lead Generation Form</div>
     <form>
@@ -269,11 +268,17 @@
     </form>
   </div>
 
-  <!-- Right: Queues & Table -->
   <div class="right-panel">
     <h2>Queues – Quick Access</h2>
     <div class="queue-dropdowns">
-      <!-- Red Flag Filters -->
+      <div class="queue-dropdown">
+        <select onchange="filterQueue(this, this.value)">
+          <option value="" disabled selected>Select High priority Queue</option>
+          <option value="G2_Consent_Pending">G2_Consent_Pending</option>
+          <option value="G2_Consent_Pending">Nearing 18 & Under Medication</option>
+          <option value="GP_Referral_No_SC_7_Days">GP referral received, No SC since 7 days</option>
+        </select>
+      </div>
       <div class="queue-dropdown">
         <select onchange="filterQueue(this, this.value)">
           <option value="" disabled selected>Select Red Flag Filter</option>
@@ -285,8 +290,6 @@
           <option value="Red_Flag_AP_Risk">Red Flag – AP Identified Risk</option>
         </select>
       </div>
-
-      <!-- No Contact After Booking Link Sent -->
       <div class="queue-dropdown">
         <select onchange="filterQueue(this, this.value)">
           <option value="" disabled selected>Select No Contact Filter</option>
@@ -295,39 +298,35 @@
           <option value="No_Contact_21_Days">No SC, No GP referral since 21 days</option>
           <option value="No_Contact_28_Days">No SC, No GP referral since 28 days – Auto Close</option>
         </select>
-      </div>      
-
-      <!-- Document & Intake Completion -->
+      </div>
       <div class="queue-dropdown">
         <select onchange="filterQueue(this, this.value)">
           <option value="" disabled selected>Select Document & Intake Filter</option>
-          <option value="Incomplete_Case">Incomplete Case – Missing Documents or Fields</option>
+          <option value="Incomplete_Case">Incomplete Case – Missing Documents</option>
         </select>
       </div>
-
-      <!-- Care Manager Decision Outcomes -->
       <div class="queue-dropdown">
         <select onchange="filterQueue(this, this.value)">
-          <option value="" disabled selected>Select Care Manager Decision</option>
-          <option value="Care Manager_Approved_7_Days">Care Manager Approved – Last 7 Days</option>
-          <option value="Care Manager_Approved_30_Days">Care Manager Approved – Last 30 Days</option>
-          <option value="Care Manager_Approved_This_Year">Care Manager Approved – This Year</option>
-          <option value="Care Manager_Rejected_7_Days">Care Manager Rejected – Last 7 Days</option>
-          <option value="Care Manager_Rejected_30_Days">Care Manager Rejected – Last 30 Days</option>
-          <option value="Care Manager_Rejected_This_Year">Care Manager Rejected – This Year</option>
-          <option value="Care Manager_On_Hold_7_Days">Care Manager On Hold – Last 7 Days</option>
-          <option value="Care Manager_On_Hold_30_Days">Care Manager On Hold – Last 30 Days</option>
-          <option value="Care Manager_On_Hold_This_Year">Care Manager On Hold – This Year</option>
+          <option value="" disabled selected>Select Care Manager Approved Cases</option>
+          <option value="Care Manager_Approved_7_Days">Last 7 Days</option>
+          <option value="Care Manager_Approved_30_Days">Last 30 Days</option>
+          <option value="Care Manager_Approved_This_Year">Last one Year</option>
         </select>
       </div>
-
-      <!-- Other Queues -->
       <div class="queue-dropdown">
         <select onchange="filterQueue(this, this.value)">
-          <option value="" disabled selected>High priority Queue</option>
-          <option value="G2_Consent_Pending">G2_Consent_Pending</option>
-          <option value="G2_Consent_Pending">Nearing 18 & Under Medication</option>
-          <option value="GP_Referral_No_SC_7_Days">GP referral received, No SC since 7 days</option>
+          <option value="" disabled selected>Select Care Manager Rejected Cases</option>
+          <option value="Care Manager_Approved_7_Days">Last 7 Days</option>
+          <option value="Care Manager_Approved_30_Days">Last 30 Days</option>
+          <option value="Care Manager_Approved_This_Year">Last one Year</option>
+        </select>
+      </div>
+      <div class="queue-dropdown">
+        <select onchange="filterQueue(this, this.value)">
+          <option value="" disabled selected>Select Care Manager Decision - On Hold</option>
+          <option value="Care Manager_Approved_7_Days">Last 7 Days</option>
+          <option value="Care Manager_Approved_30_Days">Last 30 Days</option>
+          <option value="Care Manager_Approved_This_Year">Last one Year</option>
         </select>
       </div>
     </div>
@@ -503,14 +502,12 @@
       const rows = document.querySelectorAll("#patientTable tbody tr");
       const allDropdowns = document.querySelectorAll(".queue-dropdown select");
 
-      // Reset all other dropdowns to their default (no selection) state
       allDropdowns.forEach(dropdown => {
         if (dropdown !== selectedDropdown) {
           dropdown.value = "";
         }
       });
 
-      // If no queue is selected (empty value), show all rows
       if (!queueName) {
         rows.forEach(row => {
           row.style.display = "";
@@ -518,14 +515,12 @@
         return;
       }
 
-      // Filter rows based on the selected queue
       rows.forEach(row => {
         const queue = row.getAttribute("data-queue");
         row.style.display = queue === queueName ? "" : "none";
       });
     }
 
-    // Initialize with all rows visible (no filter applied)
     document.addEventListener("DOMContentLoaded", () => {
       const rows = document.querySelectorAll("#patientTable tbody tr");
       rows.forEach(row => {
@@ -533,6 +528,5 @@
       });
     });
   </script>
-
 </body>
 </html>
