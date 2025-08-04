@@ -53,7 +53,7 @@ flowchart TD
 
     CheckDup -- No --> CreateRec["Create Patient Record"]
     CreateRec --> ConsentCheck
-    ConsentCheck -- No --> M0["Send: WA Consent Request<br><sub>📝 Email</sub>"]
+    ConsentCheck -- No --> M0["Send: WA Consent Request<br><sub>📝 WA</sub>"]
     ConsentCheck --> GPCheck{"Is GP Referral Received?"}
 
     GPCheck -- Yes --> M19["Send: GP Referral Received, Haven’t booked SC<br><sub>📝 WA if consented, else Email</sub>"]
