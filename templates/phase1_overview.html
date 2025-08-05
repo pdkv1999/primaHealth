@@ -125,7 +125,8 @@ flowchart TD
 
     InfoCheck -- No --> G2Check
     G2Check -- Yes --> M12["Send: G2 Consent Required<br><sub>📝 WA if consented, else Email</sub>"]
-    M12 --> M13["Send: Follow-up WA re. G2 consent<br><sub>📝 WA if consented, else Email</sub>"]
+    M12 --> Wait7DaysG2["⏳ Wait 7 Days Before Follow-up"]
+    Wait7DaysG2 --> M13["Send: Follow-up WA re. G2 consent<br><sub>📝 WA if consented, else Email</sub>"]
     M13 --> M14["Send: G2 Consent Received<br><sub>📝 WA if consented, else Email</sub>"]
 
     G2Check -- No --> CMReview["Care Manager Review"]
@@ -144,7 +145,7 @@ flowchart TD
     %% Styling
     class M0,M1,M2,M3,M4,M5,M6,M7,M9,M12,M13,M14,M17,M18,M19,M20,M21a,M22a,MFollowSchool,RemindWA,NoAnswerFollowup,CallAttempt,FollowUp14Days message
     class Close1,Close2,Close3,CloseRedFlag,SadEndCall sadend
-    class CRMUpdateYes,CRMUpdateNo,Wait24H,ConsentResponse logic
+    class CRMUpdateYes,CRMUpdateNo,Wait24H,ConsentResponse,Wait7DaysG2 logic
     classDef message fill:#fef6e4,stroke:#c4a000,stroke-width:1px
     classDef sadend fill:#ffe6e6,stroke:#cc0000,stroke-width:1px
     classDef logic fill:#e0f7fa,stroke:#00796b,stroke-width:1px
