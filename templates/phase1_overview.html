@@ -33,9 +33,9 @@
 flowchart TD
     Start(["Start: New Enquiry<br>(Phone, Email, GP Referral, Webform, Callback, WhatsApp)"]) --> Source{"What is the source?"}
 
-    Source -- Phone Call --> M1["Send: Phone call received (No SC No GP Referral)<br><sub>📝 WA if consented, else Email</sub>"]
-    Source -- Voicemail --> M2["Send: Missed Call (Voicemail)<br><sub>📝 Email</sub>"]
-    Source -- No Voicemail --> M3["Send: Missed Call (No Voicemail)<br><sub>📝 Email</sub>"]
+    Source -- Phone Call --> M1["Send: Phone call received (No SC No GP Referral)<br><sub>📝 Ask for WA Consent, also Email</sub>"]
+    Source -- Voicemail --> M2["Send: Missed Call (Voicemail)<br><sub>📝 WA for consent</sub>"]
+    Source -- No Voicemail --> M3["Send: Missed Call (No Voicemail)<br><sub>📝 WA for consent</sub>"]
     Source -- Callback --> M4["Send: Callback Request<br><sub>📝 WA if consented, else Email</sub>"]
     Source -- Email --> M5["Send: Email Request (Attach Parent Info)<br><sub>📝 Email</sub>"]
     Source -- GP Referral --> M6["Send: GP Referral Received (No Screening Call done)<br><sub>📝 Email</sub>"]
