@@ -192,20 +192,20 @@
 </nav>
 
 <!-- Large Heading Title -->
-<h1 class="page-title">Welcome to the UI/UX PrimaHealth's Application design</h1>
+<h1 class="page-title">Welcome to PrimaHealth's ADHD Pathway/Process</h1>
 
 <!-- Full Width Diagram Section -->
 <div class="full-width-diagram">
 <div class="mermaid">
-flowchart LR
+    flowchart LR
     subgraph Phase1["Phase 1: Referral Management"]
         A["New Enquiry (Phone, Email, GP, Webform, WhatsApp)"]
     end
 
     subgraph Phase2["Phase 2: ADHD Assessment"]
         B["Stage 1: Intake Assessment (1hr Phone Call)"]
-        C["Stage 2: Secondary Assessment - 12+: 2hr In-Person, Under 12: Pt.1 & Pt.2"]
-        D["Stage 3: Final Assessment (1hr In-Person)"]
+        C["Stage 2: Secondary Assessment - 12+: 2hr In-Person"]
+        D["Stage 3: Final Assessment/Feedback (1hr In-Person)"]
         E["Stage 4: Final ADHD Report"]
     end
 
@@ -233,6 +233,11 @@ flowchart LR
     B --> B1 --> B2
     C --> C1 --> C2
     E --> G
+
+    %% New links from Phase 3 back to Final Assessment
+    B2 --> D
+    C2 --> D
+
 </div>
 </div>
 

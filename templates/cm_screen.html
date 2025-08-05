@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Care Coordinator Dashboard (Google Drive Links)</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -82,17 +82,22 @@
           <input type="date" id="lastContactDate" onchange="calculateOverdue()" class="mt-1 w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800">
         </div>
         <div>
+          <label class="block text-sm font-medium text-gray-600">Days Since Last Contact</label>
+          <input type="text" id="overdueDays" readonly class="mt-1 w-full p-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-800">
+        </div>
+        <div>
           <label class="block text-sm font-medium text-gray-600 mt-6">AP's Reason to Block the Case</label>
           <textarea rows="3" class="mt-1 w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800">Child was unable to attend the in-person screening. Case has been temporarily blocked due to identified red flag concerns requiring Care Manager review.</textarea>
         </div>        
         <div>
           <label class="block text-sm font-medium text-gray-600 mt-6">Care Coordinator's Notes</label>
-          <textarea rows="3" class="mt-1 w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800">The case should be further assesed by the Care Manager.</textarea>
+          <textarea rows="3" class="mt-1 w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800">The case should be further assessed by the Care Manager.</textarea>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-600 mt-6">Care Manager's Notes</label>
           <textarea rows="3" class="mt-1 w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800">Care Manager view can be appended here</textarea>
         </div>
+      </div>
     </div>
 
     <div class="mb-10" id="uploadSection">
@@ -114,11 +119,23 @@
       </div>
     </div>
 
-    <div class="flex justify-center mb-10">
-      <button class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition mr-2">Save Patient Information</button>
-      <button class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition mr-2">Approved</button>
-      <button class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition mr-2">Rejected</button>
-      <button class="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition">On Hold</button>
+    <div class="mb-10">
+      <label for="caseStatus" class="block text-sm font-medium text-gray-700 mb-2">Final Decision</label>
+      <select id="caseStatus" onchange="handleDecision()" class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800">
+        <option value="">-- Select Action --</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+        <option value="on_hold">On Hold</option>
+      </select>
+
+      <div id="rejectionNotesDiv" class="mt-4 hidden">
+        <label class="block text-sm font-medium text-red-600">Rejection Reason</label>
+        <textarea id="rejectionNotes" rows="3" placeholder="Please specify the reason for rejection..." class="mt-1 w-full p-3 border border-red-300 rounded-lg bg-white text-red-700"></textarea>
+      </div>
+
+      <div class="flex justify-center mt-6">
+        <button onclick="submitDecision()" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">Submit</button>
+      </div>
     </div>
   </div>
 
@@ -131,7 +148,6 @@
     function calculateOverdue() {
       const lastContactDate = document.getElementById("lastContactDate").value;
       const overdueField = document.getElementById("overdueDays");
-      
       if (lastContactDate) {
         const lastDate = new Date(lastContactDate);
         const today = new Date();
@@ -140,6 +156,40 @@
         overdueField.value = `${diffDays} days`;
       } else {
         overdueField.value = "0 days";
+      }
+    }
+
+    function handleDecision() {
+      const status = document.getElementById("caseStatus").value;
+      const rejectionDiv = document.getElementById("rejectionNotesDiv");
+      if (status === "rejected") {
+        rejectionDiv.classList.remove("hidden");
+      } else {
+        rejectionDiv.classList.add("hidden");
+      }
+    }
+
+    function submitDecision() {
+      const status = document.getElementById("caseStatus").value;
+      if (!status) {
+        alert("Please select a final decision.");
+        return;
+      }
+
+      let message = `Are you sure you want to mark this case as '${status.replace("_", " ").toUpperCase()}'?`;
+      if (status === "rejected") {
+        const notes = document.getElementById("rejectionNotes").value.trim();
+        if (!notes) {
+          alert("Please provide a reason for rejection.");
+          return;
+        }
+        message += `\n\nRejection Reason: "${notes}"`;
+      }
+
+      const confirmAction = confirm(message);
+      if (confirmAction) {
+        alert(`Case successfully marked as: ${status.replace("_", " ").toUpperCase()}`);
+        // TODO: Save data to backend/database
       }
     }
 

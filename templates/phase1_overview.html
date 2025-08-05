@@ -3,18 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Phase 1 Overview Flowchart</title>
+  <title>PrimaHealth Phase 1 Workflow</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
       margin: 0;
-      padding: 0;
-      background-color: #f8f9fa;
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
     }
     #mermaidChart {
       padding: 20px;
       background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
       overflow-x: auto;
     }
     .mermaid {
@@ -27,32 +34,33 @@
   </style>
 </head>
 <body>
+  <h1>Phase 1: Patient Intake and Screening Workflow</h1>
   <div id="mermaidChart">
     <pre class="mermaid">
 {% raw %}
 flowchart TD
-    Start(["Start: New Enquiry<br>(Phone, Email, GP Referral, Webform, Callback, WhatsApp)"]) --> Source{"What is the source?"}
+    Start(["Start: New Enquiry<br>(Phone, Email, GP Referral, Webform, WhatsApp)"]) --> Source{"What is the source?"}
 
     Source -- Phone Call --> M1["Send: Phone call received (No SC No GP Referral)<br><sub>📝 Ask for WA Consent directly on call, also Email</sub>"]
     Source -- Voicemail --> M2["Send: Missed Call (Voicemail)<br><sub>📝 WA for consent</sub>"]
     Source -- No Voicemail --> M3["Send: Missed Call (No Voicemail)<br><sub>📝 WA for consent</sub>"]
-    Source -- Callback --> M4["Send: Callback Request<br><sub>📝 WA if consented, else Email</sub>"]
+    Source -- Webform --> M4["Send: Callback Request<br><sub>📝 WA if consented, else Email</sub>"]
     Source -- Email --> M5["Send: Email Request (Attach Parent Info)<br><sub>📝 Email</sub>"]
     Source -- GP Referral --> M6["Send: GP Referral Received (No Screening Call done)<br><sub>📝 WA for consent and also Email</sub>"]
-    Source -- Webform --> CheckDup{"Is it an existing record?"}
 
-    M1 --> CheckDup
-    M2 --> CheckDup
-    M3 --> CheckDup
-    M4 --> CheckDup
-    M5 --> CheckDup
-    M6 --> CheckDup
+    M1 --> ExistingCheck{"Is it an existing record?"}
+    M2 --> ExistingCheck
+    M3 --> ExistingCheck
+    M4 --> ExistingCheck
+    M5 --> ExistingCheck
+    M6 --> ExistingCheck
 
-    CheckDup -- Yes --> LoadRec["Load Patient Record"]
+    ExistingCheck -- Yes --> LoadRec["Load Patient Record"]
     LoadRec --> ConsentCheck["Check: WhatsApp Consent Exists"]
 
-    CheckDup -- No --> CreateRec["Create Patient Record"]
+    ExistingCheck -- No --> CreateRec["Create Patient Record"]
     CreateRec --> ConsentCheck
+
     ConsentCheck -- No --> M0["Send: WA Consent Request<br><sub>📝 WA</sub>"]
     ConsentCheck --> GPCheck{"Is GP Referral Received?"}
 
@@ -64,21 +72,33 @@ flowchart TD
     SCBookedNow -- No --> WaitMore["WaitMore"]
 
     WaitMore -- 7 Days No Response --> M7["Send: No contact 7-days - Follow up<br><sub>📝 WA if consented, else Email</sub>"]
-    M7 -- 7 More Days No Response --> M8["Send: No contact 14-days - Follow up<br><sub>📝 WA if consented, else Email</sub>"]
-    M8 -- 7 More Days No Response --> Close1["Sad End: Auto-Close – No Booking"]
-    M8 -- SC Booked --> M9
+    M7 --> CallAttempt["📞 Flag CC to make a Phone Call Attempt after 7 days"]
+    CallAttempt --> CallAnswered{"Was the call answered?"}
 
-    M9 --> ChildCheck["Two Children's Names Provided?"]
+    CallAnswered -- Yes, Wants to proceed --> BookNowCheck{"Did they book Screening Call immediately?"}
+    BookNowCheck -- Yes --> M9
+    BookNowCheck -- No --> FollowUp14Days
+
+    CallAnswered -- Yes, Does NOT want to proceed --> SadEndCall["Sad End: Declined to Proceed<br><sub>📝 WA Template, Email</sub>"]
+    CallAnswered -- Yes, Will book later --> RemindWA["Send: Reminder – To Book SC<br><sub>📝 WA Template</sub>"]
+    RemindWA --> FollowUp14Days
+    CallAnswered -- No --> NoAnswerFollowup["Send: No Answer – Follow-up<br><sub>📝 WA Template, Email</sub>"]
+    NoAnswerFollowup --> FollowUp14Days
+
+    FollowUp14Days["Send: No contact 14-days - Follow up<br><sub>📝 WA if consented, else Email</sub>"]
+    FollowUp14Days -- 7 More Days No Response --> Close1["Sad End: Auto-Close – No Booking"]
+    FollowUp14Days -- SC Booked --> M9
+
+    M9 --> ChildCheck{"Two Children's Names Provided?"}
     ChildCheck -- Yes --> M20["Send: Screening Call Slot Booked - Two Children’s Names Provided<br><sub>📝 WA if consented, else Email</sub>"]
-    M20 --> SCBookedNow
     M20 --> APAssign["Assign to AP Calendar Queue"]
     ChildCheck -- No --> APAssign
 
     APAssign --> APExec["AP Executes Screening Call (Phone)"]
     APExec --> CheckSchoolFields{"Are School Name, Email, or Teacher Name missing in CRM?"}
     CheckSchoolFields -- Yes --> MFollowSchool["Send: Follow-up School Details after SC execution by AP<br><sub>📝 WA if consented, else Email</sub>"]
-    CheckSchoolFields -- No --> GPCheck2{"Is GP Referral Received?"}
-    MFollowSchool --> GPCheck2
+    MFollowSchool --> GPCheck2{"Is GP Referral Received?"}
+    CheckSchoolFields -- No --> GPCheck2
 
     GPCheck2 -- No --> M21a["Send: Screening Call Completed, No GP Referral Yet<br><sub>📝 WA if consented, else Email</sub>"]
     M21a --> FlagCheck{"Red Flags Identified?"}
@@ -87,7 +107,6 @@ flowchart TD
     FlagCheck -- Yes --> RedList["Red Flag Types:<br>• CAMHS<br>• Eating Disorder<br>• Non-Verbal Child<br>• Suicide Attempts<br>• Can't Attend In-Person<br>• AP Clinical Concern"]
     RedList --> EscalateFlag["Flag to CC: Manual Review Required"]
     EscalateFlag --> CloseRedFlag["Sad End: Red Flag – Do Not Proceed"]
-
     FlagCheck -- No --> InfoCheck
 
     InfoCheck -- Yes --> M22a["Send: Screening Call Completed, GP Referral Received, No Previous Report(s) Yet<br><sub>📝 WA if consented, else Email</sub>"]
@@ -98,15 +117,15 @@ flowchart TD
     DocReceived -- Yes --> G2Check{"Is G2 Consent Required?"}
 
     InfoCheck -- No --> G2Check
-    G2Check -- Yes --> M12["Send: G2 Consent Required (Screening Call done &amp; GP Referral Received)<br><sub>📝 WA if consented, else Email</sub>"]
-    M12 --> M13["Send: Follow-up WA re. G2 consent for assessment<br><sub>📝 WA if consented, else Email</sub>"]
-    M13 --> M14["Send: G2 Consent Received (Screening Call done)<br><sub>📝 WA if consented, else Email</sub>"]
+    G2Check -- Yes --> M12["Send: G2 Consent Required<br><sub>📝 WA if consented, else Email</sub>"]
+    M12 --> M13["Send: Follow-up WA re. G2 consent<br><sub>📝 WA if consented, else Email</sub>"]
+    M13 --> M14["Send: G2 Consent Received<br><sub>📝 WA if consented, else Email</sub>"]
 
     G2Check -- No --> CMReview["Care Manager Review"]
     M14 --> CMReview
 
     CMReview --> Decision{"Care Manager Decision"}
-    Decision -- Accepted --> M17["Send: GP Referral Received (Screening Call done)<br><sub>📝 WA if consented, else Email</sub>"]
+    Decision -- Accepted --> M17["Send: GP Referral Received (SC done)<br><sub>📝 WA if consented, else Email</sub>"]
     M17 --> FinalPrep["Assessment Ready"]
     FinalPrep --> M18["Send: Secondary Assessment Notification<br><sub>📝 WA if consented, else Email</sub>"]
     M18 --> HappyEnd["Happy End: Proceed to Assessment"]
@@ -116,11 +135,10 @@ flowchart TD
     Decision -- On Hold --> HoldStatus["Status: Awaiting Additional Info"]
 
     %% Styling
-    class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9,M12,M13,M14,M17,M18,M19,M20,M21a,M22a,MFollowSchool message
-    class Close1,Close2,Close3,CloseRedFlag sadend
-    classDef message fill:#fff8dc,stroke:#b8860b,stroke-width:1px
+    class M0,M1,M2,M3,M4,M5,M6,M7,M9,M12,M13,M14,M17,M18,M19,M20,M21a,M22a,MFollowSchool,RemindWA,NoAnswerFollowup,CallAttempt,FollowUp14Days message
+    class Close1,Close2,Close3,CloseRedFlag,SadEndCall sadend
+    classDef message fill:#fef6e4,stroke:#c4a000,stroke-width:1px
     classDef sadend fill:#ffe6e6,stroke:#cc0000,stroke-width:1px
-    classDef fieldcheck fill:#e6f7ff,stroke:#1890ff,stroke-width:1px
 {% endraw %}
     </pre>
   </div>
@@ -129,9 +147,10 @@ flowchart TD
       startOnLoad: true,
       theme: 'default',
       flowchart: {
-        useMaxWidth: false,
+        useMaxWidth: true,
         htmlLabels: true,
-        padding: 10
+        padding: 10,
+        curve: 'basis'
       }
     });
   </script>
