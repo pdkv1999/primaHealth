@@ -94,7 +94,7 @@ flowchart TD
     M22a --> DocWait["Wait for Docs"]
     DocWait -- 14 Days --> DocReceived{"Docs Received?"}
     DocReceived -- No --> EscalateMissing["Flag to CC: Missing Docs (Manual Escalation)"]
-    EscalateMissing --> Close2["Sad End: Auto-Close – Missing Docs"]
+    EscalateMissing --> Close2["Sad End: Close – Incomplete Case – Missing Documents"]
     DocReceived -- Yes --> G2Check{"Is G2 Consent Required?"}
 
     InfoCheck -- No --> G2Check
