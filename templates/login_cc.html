@@ -48,13 +48,13 @@
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
-      margin-bottom: 8px; /* Small space below filters */
+      margin-bottom: 8px;
     }
 
     .queue-dropdown {
       position: relative;
       display: inline-block;
-      flex-basis: 24%; /* Approximately 25% width for 4 filters in a row, adjusted for gap */
+      flex-basis: 24%;
     }
 
     .queue-dropdown select {
@@ -155,6 +155,11 @@
       cursor: pointer;
     }
 
+    .ph-id:hover {
+      text-decoration: underline;
+      color: #2563eb;
+    }
+
     .form-title {
       font-weight: 600;
       margin-bottom: 20px;
@@ -230,6 +235,10 @@
     .submit-btn:active {
       transform: translateY(0);
     }
+
+    .action-checkbox {
+      accent-color: #3b82f6;
+    }
   </style>
 </head>
 <body>
@@ -275,7 +284,7 @@
         <select onchange="filterQueue(this, this.value)">
           <option value="" disabled selected>Select High priority Queue</option>
           <option value="G2_Consent_Pending">G2_Consent_Pending</option>
-          <option value="G2_Consent_Pending">Nearing 18 & Under Medication</option>
+          <option value="Nearing_18_Under_Medication">Nearing 18 & Under Medication</option>
           <option value="GP_Referral_No_SC_7_Days">GP referral received, No SC since 7 days</option>
         </select>
       </div>
@@ -315,17 +324,17 @@
       <div class="queue-dropdown">
         <select onchange="filterQueue(this, this.value)">
           <option value="" disabled selected>Select Care Manager Rejected Cases</option>
-          <option value="Care Manager_Approved_7_Days">Last 7 Days</option>
-          <option value="Care Manager_Approved_30_Days">Last 30 Days</option>
-          <option value="Care Manager_Approved_This_Year">Last one Year</option>
+          <option value="Care Manager_Rejected_7_Days">Last 7 Days</option>
+          <option value="Care Manager_Rejected_30_Days">Last 30 Days</option>
+          <option value="Care Manager_Rejected_This_Year">Last one Year</option>
         </select>
       </div>
       <div class="queue-dropdown">
         <select onchange="filterQueue(this, this.value)">
           <option value="" disabled selected>Select Care Manager Decision - On Hold</option>
-          <option value="Care Manager_Approved_7_Days">Last 7 Days</option>
-          <option value="Care Manager_Approved_30_Days">Last 30 Days</option>
-          <option value="Care Manager_Approved_This_Year">Last one Year</option>
+          <option value="Care Manager_On_Hold_7_Days">Last 7 Days</option>
+          <option value="Care Manager_On_Hold_30_Days">Last 30 Days</option>
+          <option value="Care Manager_On_Hold_This_Year">Last one Year</option>
         </select>
       </div>
     </div>
@@ -342,141 +351,161 @@
           <th>PrimaHealth ID</th>
           <th>Email</th>
           <th>Created Date</th>
+          <th>Action Taken</th>
         </tr>
       </thead>
       <tbody>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('1')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>John Smith</td>
           <td>+353 123456789</td>
-          <td>PH1234</td>
+          <td><span class="ph-id" onclick="goToCC('1')" style="cursor: pointer; color: #3b82f6;">PH1234</span></td>
           <td>john.smith@example.com</td>
           <td>22/07/2025, 11:05</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '1')"></td>
         </tr>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('2')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>Alice Brown</td>
           <td>+353 987654321</td>
-          <td>PH1235</td>
+          <td><span class="ph-id" onclick="goToCC('2')" style="cursor: pointer; color: #3b82f6;">PH1235</span></td>
           <td>alice.brown@example.com</td>
           <td>22/07/2025, 10:47</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '2')"></td>
         </tr>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('3')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>Mark Johnson</td>
           <td>+353 456789123</td>
-          <td>PH1236</td>
+          <td><span class="ph-id" onclick="goToCC('3')" style="cursor: pointer; color: #3b82f6;">PH1236</span></td>
           <td>mark.johnson@example.com</td>
           <td>22/07/2025, 10:30</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '3')"></td>
         </tr>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('4')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>Emma Wilson</td>
           <td>+353 234567890</td>
-          <td>PH1237</td>
+          <td><span class="ph-id" onclick="goToCC('4')" style="cursor: pointer; color: #3b82f6;">PH1237</span></td>
           <td>emma.wilson@example.com</td>
           <td>22/07/2025, 09:15</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '4')"></td>
         </tr>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('5')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>Liam Davis</td>
           <td>+353 345678901</td>
-          <td>PH1238</td>
+          <td><span class="ph-id" onclick="goToCC('5')" style="cursor: pointer; color: #3b82f6;">PH1238</span></td>
           <td>liam.davis@example.com</td>
           <td>22/07/2025, 08:50</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '5')"></td>
         </tr>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('6')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>Sophia Clark</td>
           <td>+353 567890123</td>
-          <td>PH1239</td>
+          <td><span class="ph-id" onclick="goToCC('6')" style="cursor: pointer; color: #3b82f6;">PH1239</span></td>
           <td>sophia.clark@example.com</td>
           <td>22/07/2025, 08:20</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '6')"></td>
         </tr>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('7')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>James Lewis</td>
           <td>+353 678901234</td>
-          <td>PH1240</td>
+          <td><span class="ph-id" onclick="goToCC('7')" style="cursor: pointer; color: #3b82f6;">PH1240</span></td>
           <td>james.lewis@example.com</td>
           <td>22/07/2025, 07:45</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '7')"></td>
         </tr>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('8')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>Olivia Walker</td>
           <td>+353 789012345</td>
-          <td>PH1241</td>
+          <td><span class="ph-id" onclick="goToCC('8')" style="cursor: pointer; color: #3b82f6;">PH1241</span></td>
           <td>olivia.walker@example.com</td>
           <td>22/07/2025, 07:10</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '8')"></td>
         </tr>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('9')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>Noah Harris</td>
           <td>+353 890123456</td>
-          <td>PH1242</td>
+          <td><span class="ph-id" onclick="goToCC('9')" style="cursor: pointer; color: #3b82f6;">PH1242</span></td>
           <td>noah.harris@example.com</td>
           <td>22/07/2025, 06:30</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '9')"></td>
         </tr>
-        <tr data-queue="Recently_Viewed" onclick="goToCC('10')">
+        <tr data-queue="Recently_Viewed" data-action-taken="false">
           <td>Isabella Young</td>
           <td>+353 901234567</td>
-          <td>PH1243</td>
+          <td><span class="ph-id" onclick="goToCC('10')" style="cursor: pointer; color: #3b82f6;">PH1243</span></td>
           <td>isabella.young@example.com</td>
           <td>22/07/2025, 06:00</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '10')"></td>
         </tr>
-        <tr data-queue="SC_Not_Booked_7Days" onclick="goToCC('11')">
+        <tr data-queue="SC_Not_Booked_7Days" data-action-taken="false">
           <td>Ethan Moore</td>
           <td>+353 112233445</td>
-          <td>PH1244</td>
+          <td><span class="ph-id" onclick="goToCC('11')" style="cursor: pointer; color: #3b82f6;">PH1244</span></td>
           <td>ethan.moore@example.com</td>
           <td>21/07/2025, 14:20</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '11')"></td>
         </tr>
-        <tr data-queue="G2_Consent_Pending" onclick="goToCC('12')">
+        <tr data-queue="G2_Consent_Pending" data-action-taken="false">
           <td>Ava Taylor</td>
           <td>+353 223344556</td>
-          <td>PH1245</td>
+          <td><span class="ph-id" onclick="goToCC('12')" style="cursor: pointer; color: #3b82f6;">PH1245</span></td>
           <td>ava.taylor@example.com</td>
           <td>21/07/2025, 13:15</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '12')"></td>
         </tr>
-        <tr data-queue="Red_Flag_CAMHS_Concern" onclick="goToCC('14')">
+        <tr data-queue="Red_Flag_CAMHS_Concern" data-action-taken="false">
           <td>Lucas White</td>
           <td>+353 445566778</td>
-          <td>PH1247</td>
+          <td><span class="ph-id" onclick="goToCC('14')" style="cursor: pointer; color: #3b82f6;">PH1247</span></td>
           <td>lucas.white@example.com</td>
           <td>21/07/2025, 11:00</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '14')"></td>
         </tr>
-        <tr data-queue="Red_Flag_Eating_Disorder" onclick="goToCC('15')">
+        <tr data-queue="Red_Flag_Eating_Disorder" data-action-taken="false">
           <td>Chloe Green</td>
           <td>+353 556677889</td>
-          <td>PH1248</td>
+          <td><span class="ph-id" onclick="goToCC('15')" style="cursor: pointer; color: #3b82f6;">PH1248</span></td>
           <td>chloe.green@example.com</td>
           <td>21/07/2025, 10:45</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '15')"></td>
         </tr>
-        <tr data-queue="No_Contact_7_Days" onclick="goToCC('16')">
+        <tr data-queue="No_Contact_7_Days" data-action-taken="false">
           <td>Jacob King</td>
           <td>+353 667788990</td>
-          <td>PH1249</td>
+          <td><span class="ph-id" onclick="goToCC('16')" style="cursor: pointer; color: #3b82f6;">PH1249</span></td>
           <td>jacob.king@example.com</td>
           <td>21/07/2025, 10:30</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '16')"></td>
         </tr>
-        <tr data-queue="Incomplete_Case" onclick="goToCC('17')">
+        <tr data-queue="Incomplete_Case" data-action-taken="false">
           <td>Harper Lee</td>
           <td>+353 778899001</td>
-          <td>PH1250</td>
+          <td><span class="ph-id" onclick="goToCC('17')" style="cursor: pointer; color: #3b82f6;">PH1250</span></td>
           <td>harper.lee@example.com</td>
           <td>21/07/2025, 10:15</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '17')"></td>
         </tr>
-        <tr data-queue="Care Manager_Approved_7_Days" onclick="goToCC('18')">
+        <tr data-queue="Care Manager_Approved_7_Days" data-action-taken="false">
           <td>Ella Adams</td>
           <td>+353 889900112</td>
-          <td>PH1251</td>
+          <td><span class="ph-id" onclick="goToCC('18')" style="cursor: pointer; color: #3b82f6;">PH1251</span></td>
           <td>ella.adams@example.com</td>
           <td>21/07/2025, 10:00</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '18')"></td>
         </tr>
-        <tr data-queue="Care Manager_Rejected_7_Days" onclick="goToCC('19')">
+        <tr data-queue="Care Manager_Rejected_7_Days" data-action-taken="false">
           <td>Logan Baker</td>
           <td>+353 990011223</td>
-          <td>PH1252</td>
+          <td><span class="ph-id" onclick="goToCC('19')" style="cursor: pointer; color: #3b82f6;">PH1252</span></td>
           <td>logan.baker@example.com</td>
           <td>21/07/2025, 09:45</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '18')"></td>
         </tr>
-        <tr data-queue="Care Manager_On_Hold_7_Days" onclick="goToCC('20')">
+        <tr data-queue="Care Manager_On_Hold_7_Days" data-action-taken="false">
           <td>Lily Carter</td>
           <td>+353 001122334</td>
-          <td>PH1253</td>
+          <td><span class="ph-id" onclick="goToCC('20')" style="cursor: pointer; color: #3b82f6;">PH1253</span></td>
           <td>lily.carter@example.com</td>
           <td>21/07/2025, 09:30</td>
+          <td><input type="checkbox" class="action-checkbox" onchange="updateActionTaken(this, '20')"></td>
         </tr>
       </tbody>
     </table>
@@ -485,6 +514,15 @@
   <script>
     function goToCC(patientId) {
       window.location.href = `cc_screen?patientId=${patientId}`;
+    }
+
+    function updateActionTaken(checkbox, patientId) {
+      const row = checkbox.closest('tr');
+      row.setAttribute('data-action-taken', checkbox.checked ? 'true' : 'false');
+      if (checkbox.checked) {
+        row.style.display = 'none'; // Hide the row when the checkbox is checked
+      }
+      // Optionally, you could add code here to persist the action taken state to a backend
     }
 
     function searchPatient() {
@@ -515,8 +553,14 @@
       }
 
       rows.forEach(row => {
-        const queue = row.getAttribute("data-queue");
-        row.style.display = queue === queueName ? "" : "none";
+        if (queueName === "Action_Taken" || queueName === "Action_Not_Taken") {
+          const actionTaken = row.getAttribute("data-action-taken") === "true";
+          row.style.display = (queueName === "Action_Taken" && actionTaken) || 
+                            (queueName === "Action_Not_Taken" && !actionTaken) ? "" : "none";
+        } else {
+          const queue = row.getAttribute("data-queue");
+          row.style.display = queue === queueName ? "" : "none";
+        }
       });
     }
 
