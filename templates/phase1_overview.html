@@ -62,7 +62,14 @@ flowchart TD
     CreateRec --> ConsentCheck
 
     ConsentCheck -- No --> M0["Send: WA Consent Request<br><sub>📝 WA</sub>"]
-    ConsentCheck --> GPCheck{"Is GP Referral Received?"}
+    M0 --> Wait24H["⏳ Wait 24 Hours"]
+    Wait24H --> ConsentResponse{"Any Response?"}
+    ConsentResponse -- No Response --> CRMUpdateYes["✅ Update CRM: Consent Given – Proceed via WA"]
+    ConsentResponse -- STOP/Unsubscribe --> CRMUpdateNo["❌ Update CRM: Consent Not Given – Proceed via Email Only"]
+
+    CRMUpdateYes --> GPCheck{"Is GP Referral Received?"}
+    CRMUpdateNo --> GPCheck
+    ConsentCheck -- Yes --> GPCheck
 
     GPCheck -- Yes --> M19["Send: GP Referral Received, Haven’t booked SC<br><sub>📝 WA if consented, else Email</sub>"]
     M19 --> SCBookedNow{"Is Screening Call Already Booked?"}
@@ -137,8 +144,10 @@ flowchart TD
     %% Styling
     class M0,M1,M2,M3,M4,M5,M6,M7,M9,M12,M13,M14,M17,M18,M19,M20,M21a,M22a,MFollowSchool,RemindWA,NoAnswerFollowup,CallAttempt,FollowUp14Days message
     class Close1,Close2,Close3,CloseRedFlag,SadEndCall sadend
+    class CRMUpdateYes,CRMUpdateNo,Wait24H,ConsentResponse logic
     classDef message fill:#fef6e4,stroke:#c4a000,stroke-width:1px
     classDef sadend fill:#ffe6e6,stroke:#cc0000,stroke-width:1px
+    classDef logic fill:#e0f7fa,stroke:#00796b,stroke-width:1px
 {% endraw %}
     </pre>
   </div>
