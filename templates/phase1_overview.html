@@ -65,7 +65,7 @@ flowchart TD
 
     WaitMore -- 7 Days No Response --> M7["Send: No contact 7-days - Follow up<br><sub>📝 WA if consented, else Email</sub>"]
     M7 -- 7 More Days No Response --> M8["Send: No contact 14-days - Follow up<br><sub>📝 WA if consented, else Email</sub>"]
-    M8 -- No Response --> Close1["Sad End: Auto-Close – No Booking"]
+    M8 -- 7 More Days No Response --> Close1["Sad End: Auto-Close – No Booking"]
     M8 -- SC Booked --> M9
 
     M9 --> ChildCheck["Two Children's Names Provided?"]
