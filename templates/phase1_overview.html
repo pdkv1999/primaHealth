@@ -41,12 +41,12 @@
 flowchart TD
     Start(["Start: New Enquiry<br>(Phone, Email, GP Referral, Webform, WhatsApp)"]) --> Source{"What is the source?"}
 
-    Source -- Phone Call --> M1["Send: Phone call received (No SC No GP Referral)<br><sub>📝 Ask for WA Consent directly on call, also Email</sub>"]
-    Source -- Voicemail --> M2["Send: Missed Call (Voicemail)<br><sub>📝 WA for consent</sub>"]
-    Source -- No Voicemail --> M3["Send: Missed Call (No Voicemail)<br><sub>📝 WA for consent</sub>"]
-    Source -- Webform --> M4["Send: Callback Request<br><sub>📝 WA if consented, else Email</sub>"]
+    Source -- Phone Call --> M1["Send: Phone call received (No SC No GP Referral)<br><sub>📝 Email</sub>"]
+    Source -- Voicemail --> M2["Send: Missed Call (Voicemail)<br><sub>📝 Email</sub>"]
+    Source -- No Voicemail --> M3["Send: Missed Call (No Voicemail)<br><sub>📝 Email</sub>"]
+    Source -- Webform --> M4["Send: Callback Request<br><sub>📝 Email</sub>"]
     Source -- Email --> M5["Send: Email Request (Attach Parent Info)<br><sub>📝 Email</sub>"]
-    Source -- GP Referral --> M6["Send: GP Referral Received (No Screening Call done)<br><sub>📝 WA for consent and also Email</sub>"]
+    Source -- GP Referral --> M6["Send: GP Referral Received (No Screening Call done)<br><sub>📝 Email</sub>"]
 
     M1 --> ExistingCheck{"Is it an existing record?"}
     M2 --> ExistingCheck
@@ -56,20 +56,17 @@ flowchart TD
     M6 --> ExistingCheck
 
     ExistingCheck -- Yes --> LoadRec["Load Patient Record"]
-    LoadRec --> ConsentCheck["Check: WhatsApp Consent Exists"]
-
+    LoadRec --> M0
     ExistingCheck -- No --> CreateRec["Create Patient Record"]
-    CreateRec --> ConsentCheck
+    CreateRec --> M0
 
-    ConsentCheck -- No --> M0["Send: WA Consent Request<br><sub>📝 WA</sub>"]
-    M0 --> Wait24H["⏳ Wait 24 Hours"]
-    Wait24H --> ConsentResponse{"Any Response?"}
-    ConsentResponse -- No Response --> CRMUpdateYes["✅ Update CRM: Consent Given – Proceed via WA"]
-    ConsentResponse -- STOP/Unsubscribe --> CRMUpdateNo["❌ Update CRM: Consent Not Given – Proceed via Email Only"]
+    M0["Send: WA Consent Request via Email<br><sub>📝 Email</sub>"] --> Wait24H["⏳ Wait 24 Hours for Email Response"]
+    Wait24H --> ConsentResponse{"Email Response Received?"}
+    ConsentResponse -- Yes, WA Consent Given --> CRMUpdateYes["✅ Update CRM: Consent Given – Proceed via WA"]
+    ConsentResponse -- No or Declined --> CRMUpdateNo["❌ Update CRM: Consent Not Given – Proceed via Email Only"]
 
     CRMUpdateYes --> GPCheck{"Is GP Referral Received?"}
     CRMUpdateNo --> GPCheck
-    ConsentCheck -- Yes --> GPCheck
 
     GPCheck -- Yes --> M19["Send: GP Referral Received, Haven’t booked SC<br><sub>📝 WA if consented, else Email</sub>"]
     M19 --> SCBookedNow{"Is Screening Call Already Booked?"}
@@ -86,10 +83,10 @@ flowchart TD
     BookNowCheck -- Yes --> M9
     BookNowCheck -- No --> FollowUp14Days
 
-    CallAnswered -- Yes, Does NOT want to proceed --> SadEndCall["Sad End: Declined to Proceed<br><sub>📝 WA Template, Email</sub>"]
-    CallAnswered -- Yes, Will book later --> RemindWA["Send: Reminder – To Book SC<br><sub>📝 WA Template</sub>"]
+    CallAnswered -- Yes, Does NOT want to proceed --> SadEndCall["Sad End: Declined to Proceed<br><sub>📝 WA if consented, else Email</sub>"]
+    CallAnswered -- Yes, Will book later --> RemindWA["Send: Reminder – To Book SC<br><sub>📝 WA if consented, else Email</sub>"]
     RemindWA --> FollowUp14Days
-    CallAnswered -- No --> NoAnswerFollowup["Send: No Answer – Follow-up<br><sub>📝 WA Template, Email</sub>"]
+    CallAnswered -- No --> NoAnswerFollowup["Send: No Answer – Follow-up<br><sub>📝 WA if consented, else Email</sub>"]
     NoAnswerFollowup --> FollowUp14Days
 
     FollowUp14Days["Send: No contact 14-days - Follow up<br><sub>📝 WA if consented, else Email</sub>"]
@@ -149,6 +146,7 @@ flowchart TD
     classDef message fill:#fef6e4,stroke:#c4a000,stroke-width:1px
     classDef sadend fill:#ffe6e6,stroke:#cc0000,stroke-width:1px
     classDef logic fill:#e0f7fa,stroke:#00796b,stroke-width:1px
+
 {% endraw %}
     </pre>
   </div>
