@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AP Screen</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -11,6 +11,7 @@
     <h1 class="text-3xl font-bold text-gray-800 text-center mb-8">Assistant Psychologist</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Case Details -->
       <div class="bg-white p-6 rounded-xl shadow-lg">
         <h3 class="text-xl font-semibold text-gray-700 mb-4">Case Details</h3>
         <p class="text-gray-600 mb-2"><strong>PrimaHealth Reference Number:</strong> PH25-001</p>
@@ -23,9 +24,9 @@
         <button onclick="window.location.href='https://docs.google.com/document/d/1XouQO4frNGNN-KdMsM9PChhG6JZDtuQtkDAeph9ZcN0/edit?tab=t.0'" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full">Complete SC Form</button>
       </div>
 
+      <!-- Status -->
       <div class="bg-white p-6 rounded-xl shadow-lg">
         <h3 class="text-xl font-semibold text-gray-700 mb-4">Status (Data from real time)</h3>
-      
         <p class="text-gray-600 mb-2"><strong>SC Status:</strong> Booked</p>
         <p class="text-gray-600 mb-2"><strong>GP Referral:</strong> Received</p>
         <p class="text-gray-600 mb-2"><strong>Previous Reports:</strong> Not Received</p>
@@ -36,52 +37,32 @@
         <p class="text-gray-600 mb-2"><strong>School Details:</strong> Received</p>
         <p class="text-gray-600 mb-2"><strong>Block Progress:</strong> No</p>
       </div>
-      
 
+      <!-- Call Checklist -->
       <div class="bg-white p-6 rounded-xl shadow-lg col-span-1 md:col-span-2">
         <h3 class="text-xl font-semibold text-gray-700 mb-4">Call Checklist</h3>
         <div class="space-y-3">
-          <label class="flex items-center text-gray-600">
-            <input type="checkbox" class="mr-2">
-            GP Referral received?
-          </label>
-          <label class="flex items-center text-gray-600">
-            <input type="checkbox" class="mr-2">
-            Any previous reports?
-          </label>
-          <label class="flex items-center text-gray-600">
-            <input type="checkbox" class="mr-2">
-            Guardian1 Consent received?
-          </label>
-          <label class="flex items-center text-gray-600">
-            <input type="checkbox" class="mr-2">
-            Guardian2 consent received?
-          </label>
-          <label class="flex items-center text-gray-600">
-            <input type="checkbox" class="mr-2">
-            Emergency Contact Required (if Single Parent Household)
-          </label>
-          <label class="flex items-center text-gray-600">
-            <input type="checkbox" class="mr-2">
-            CAMHS discharge letter required?
-          </label>
-          <label class="flex items-center text-gray-600">
-            <input type="checkbox" class="mr-2">
-            Main School Name & Address, School Email, Preferred Teacher Name received?
-          </label>
+          <label class="flex items-center text-gray-600"><input type="checkbox" class="mr-2">GP Referral received?</label>
+          <label class="flex items-center text-gray-600"><input type="checkbox" class="mr-2">Any previous reports?</label>
+          <label class="flex items-center text-gray-600"><input type="checkbox" class="mr-2">Guardian1 Consent received?</label>
+          <label class="flex items-center text-gray-600"><input type="checkbox" class="mr-2">Guardian2 consent received?</label>
+          <label class="flex items-center text-gray-600"><input type="checkbox" class="mr-2">Emergency Contact Required (if Single Parent Household)</label>
+          <label class="flex items-center text-gray-600"><input type="checkbox" class="mr-2">CAMHS discharge letter required?</label>
+          <label class="flex items-center text-gray-600"><input type="checkbox" class="mr-2">Main School Name & Address, School Email, Preferred Teacher Name received?</label>
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-xl shadow-lg col-span-1 md:col-span-2">
+      <!-- Final Conclusion -->
+      <div id="finalConclusion" class="bg-white p-6 rounded-xl shadow-lg col-span-1 md:col-span-2 transition-all">
         <h3 class="text-xl font-semibold text-gray-700 mb-4">Final Conclusion</h3>
         <div class="text-gray-600">
-          <strong>Block:</strong>
+          <strong>Good to proceed further?</strong>
           <label class="inline-flex items-center mr-4">
-            <input type="radio" name="block" value="yes" class="form-radio text-blue-600" onchange="toggleDetails()">
+            <input type="radio" name="block" value="yes" class="form-radio text-blue-600" onchange="toggleDetails()" checked>
             <span class="ml-2">Yes</span>
           </label>
           <label class="inline-flex items-center">
-            <input type="radio" name="block" value="no" class="form-radio text-blue-600" onchange="toggleDetails()" checked>
+            <input type="radio" name="block" value="no" class="form-radio text-blue-600" onchange="toggleDetails()">
             <span class="ml-2">No</span>
           </label>
         </div>
@@ -90,16 +71,31 @@
           <textarea id="details" name="details" rows="4" class="w-full p-2 border rounded-md text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter details here..."></textarea>
         </div>
       </div>
-      
-      <script>
-        function toggleDetails() {
-          const yesRadio = document.querySelector('input[name="block"][value="yes"]');
-          const detailsSection = document.getElementById('detailsSection');
-          detailsSection.classList.toggle('hidden', !yesRadio.checked);
-        }
-      </script>
+
       <button id="saveButton" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Save Information</button>
     </div>
   </div>
+
+  <script>
+    function toggleDetails() {
+      const yesRadio = document.querySelector('input[name="block"][value="yes"]');
+      const noRadio = document.querySelector('input[name="block"][value="no"]');
+      const detailsSection = document.getElementById('detailsSection');
+      const finalConclusionBox = document.getElementById('finalConclusion');
+
+      if (noRadio.checked) {
+        detailsSection.classList.remove('hidden');
+        finalConclusionBox.classList.remove('bg-white');
+        finalConclusionBox.classList.add('bg-red-100');
+      } else {
+        detailsSection.classList.add('hidden');
+        finalConclusionBox.classList.add('bg-white');
+        finalConclusionBox.classList.remove('bg-red-100');
+      }
+    }
+
+    // Trigger on page load to apply correct style based on default
+    window.onload = toggleDetails;
+  </script>
 </body>
 </html>
