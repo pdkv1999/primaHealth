@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PrimaHealth Phase 2 Workflow</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    #mermaidChart {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+    }
+    .mermaid {
+      font-size: 16px;
+    }
+    svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>Phase 2: ADHD Assessment</h1>
+  <div id="mermaidChart">
+    <pre class="mermaid">
+{% raw %}
+
+flowchart TD
+  Start["🔓 Phase 1 Approved"] --> B1["📩 Send Stage 1 Booking Link via WhatsApp"]
+  B1 --> B2["👨‍👩‍👧 Guardian Books & Pays €500"]
+  B2 --> B3["🧾 Email Receipt + WA Confirmation"]
+  B3 --> B4["📬 Notify GP (Proposed: Email Automation)"]
+  B4 --> B5["📦 Send Family Details Form (Consent + Conners P/T/C if >8)"]
+  B5 --> B6["📊 Start FD Form + Conners Tracker"]
+  B6 --> FDWait["🕒 Wait 7 Days (FD Tracker)"]
+  FDWait --> FDCheck{"✔️ FD Form Received?"}
+  FDCheck -- No --> FDRemind["📨 WA Reminder to Submit FD Form"]
+  FDRemind --> FDRecheck["🔁 Recheck After Reminder"]
+  FDRecheck --> FDCheck
+  FDCheck -- Yes --> B7
+  B6 --> B7["📆 WA Reminder 1 Day Before (Call Notification)"]
+  B7 --> B8["📞 Clinician Intake Call (Telephony Task)"]
+  B8 --> B9["📝 Fill Stage 1 Proforma"]
+  B9 --> B10{"✅ Stage 1 Complete?"}
+  B10 -- No --> B11["❌ Block & Flag to CC (Recheck in 7 Days)"]
+  B10 -- Yes --> C1["🔓 Trigger Stage 2 Booking Link"]
+  C1 --> C2["👨‍👩‍👧 Guardian Books & Pays €500"]
+  C2 --> C3["🧾 Email Receipt + WA Confirmation"]
+  C3 --> C4["📆 WA Reminder 1 Day Before (Include Room# for Mary)"]
+  C4 --> C5["🔎 Determine Age & Prior Assessment"]
+  C5 --> C6{"Child < 12?"}
+  C6 -- Yes --> C7{"Prior ADHD or Psycho-ed Assessment?"}
+  C7 -- Yes --> C8["👨‍⚕️ Assign Leo"]
+  C7 -- No --> C9["👩‍⚕️ Assign Mary"]
+  C6 -- No --> C8
+  C8 --> C10["📅 Check Clinician & Room Availability"]
+  C9 --> C10
+  C10 --> C11["📝 Prefill Stage 2 Proforma"]
+  C11 --> C12["👥 In-Person Assessment (1hr)"]
+  C12 --> C13["🖊️ Clinician Completes & Signs Proforma"]
+  C13 --> C14{"✅ Stage 2 Complete?"}
+  C14 -- No --> C15["❌ Block & Flag to CC"]
+  C14 -- Yes --> C16["🧑‍⚕️ Clinician Decision Point"]
+  C16 --> E1["📝 Issue Interim Report (Optional)"]
+  C16 --> C17["🔎 Check Conners Tracker (P + T + C if >8)"]
+  C17 --> C18{"✔️ All Conners Forms Received?"}
+  C18 -- No --> C19["📨 WA Reminder + Wait 7 Days"]
+  C19 --> C17
+  C18 -- Yes --> D1["🔓 Trigger Stage 3 Booking Link"]
+  D1 --> D2["👨‍👩‍👧 Guardian Books & Pays €850"]
+  D2 --> D3["🧾 Email Receipt + WA Confirmation"]
+  D3 --> D4["📆 WA Reminder 1 Day Before (Date/Time/Location)"]
+  D4 --> D5["👥 Final In-Person Assessment (1hr)"]
+  D5 --> D6["📝 Complete Stage 3 Proforma"]
+  D6 --> D7{"✅ Stage 3 Proforma Complete?"}
+  D7 -- No --> D8["❌ Flag to CC + Recheck in 7 Days"]
+  D7 -- Yes --> F1["📄 Generate Final Report"]
+  E1 --> E2["🔐 Encrypt PDF with DOB"]
+  F1 --> F2["🔐 Encrypt PDF with DOB"]
+  E2 --> E3["📤 Email to G1 + Password Instructions"]
+  F2 --> F3["📤 Email to G1 + Password Instructions"]
+  E3 --> E4["🕓 Log Report Dispatch Timestamp"]
+  F3 --> F4["🕓 Log Report Dispatch Timestamp"]
+  E4 --> G1["📌 Clinician Selects Next Steps"]
+  F4 --> G1
+  G1 --> G2["📄 School Letter (If No Prior Dx)"]
+  G1 --> G3["📑 Route to Phase 3 (Additional Assessments)"]
+  G1 --> G4["🌱 Aftercare Recommendation"]
+  G4 --> A1["🧠 OT"]
+  G4 --> A2["💬 CBT"]
+  G4 --> A3["🧘 Psychotherapy"]
+  G4 --> A4["💊 Medication"]
+  G4 --> A5["💊 Medication + CBT"]
+  G4 --> A6["🗣️ SLT"]
+  G4 --> A7["❌ No Aftercare"]
+  G4 --> A8["📨 Other (To Be Decided)"]
+{% endraw %}
+    </pre>
+  </div>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        padding: 10,
+        curve: 'basis'
+      }
+    });
+  </script>
+</body>
+</html>

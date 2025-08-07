@@ -50,6 +50,10 @@ def phase1_overview():
 def phase2():
     return render_template('phase2.html')
 
+@app.route('/phase2/phase2_overview')
+def phase2_overview():
+    return render_template('phase2_overview.html')
+
 @app.route('/consent')
 def consent():
     return render_template('consent.html')
