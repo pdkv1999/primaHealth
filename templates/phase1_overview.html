@@ -83,10 +83,10 @@ flowchart TD
     BookNowCheck -- Yes --> M9
     BookNowCheck -- No --> FollowUp14Days
 
-    CallAnswered -- Yes, Does NOT want to proceed --> SadEndCall["Sad End: Declined to Proceed<br><sub>📝 WA if consented, else Email</sub>"]
-    CallAnswered -- Yes, Will book later --> RemindWA["Send: Reminder – To Book SC<br><sub>📝 WA if consented, else Email</sub>"]
+    CallAnswered -- Yes, Does NOT want to proceed --> SadEndCall["Sad End: CC closes case with appropriate comments."]
+    CallAnswered -- Yes, Will book later --> RemindWA["Wait for 7 more days"]
     RemindWA --> FollowUp14Days
-    CallAnswered -- No --> NoAnswerFollowup["Send: No Answer – Follow-up<br><sub>📝 WA if consented, else Email</sub>"]
+    CallAnswered -- No --> NoAnswerFollowup["Wait for 7 more days"]
     NoAnswerFollowup --> FollowUp14Days
 
     FollowUp14Days["Send: No contact 14-days - Follow up<br><sub>📝 WA if consented, else Email</sub>"]
