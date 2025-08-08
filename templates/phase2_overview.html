@@ -38,103 +38,114 @@
   <div id="mermaidChart">
     {% raw %}
     <pre class="mermaid">
-    flowchart TD
-    
-      %% PHASE 2: ADHD ASSESSMENT WORKFLOW
-    
-      Start["🔓 Phase 1 Approved"] --> B1["📩 Send Stage 1 Booking Link via WhatsApp"]
-      B1 --> B2["👨‍👩‍👧 Guardian Books & Pays €500"]
-      B2 --> B3["🧾 Email Receipt + WA Confirmation"]
-      B3 --> B4["📬 Notify GP<br><sub>(Proposed: Email Automation)</sub>"]
-      B4 --> B5["📦 Send Family Details Form<br><sub>(Consent + Conners P/T/C if >8)</sub>"]
-      B5 --> B6["📊 Start FD Form + Conners Tracker"]
-      B6 --> FDWait["🕒 Wait 7 Days (FD Tracker)"]
-      FDWait --> FDCheck{"✔️ FD Form Received?"}
-      FDCheck -- No --> FDRemind["📨 WA Reminder to Submit FD Form"]
-      FDRemind --> FDRecheck["🔁 Recheck After Reminder"]
-      FDRecheck --> FDCheck
-      FDCheck -- Yes --> B7
-      B6 --> B7["📆 WA Reminder 1 Day Before<br><sub>(Call Notification)</sub>"]
-      B7 --> B8["📞 Clinician Intake Call<br><sub>(Telephony Task)</sub>"]
-      B8 --> B9["📝 Fill Stage 1 Proforma"]
-      B9 --> B10{"✅ Stage 1 Complete?"}
-      B10 -- No --> B11["❌ Block & Flag to CC<br><sub>(Recheck in 7 Days)</sub>"]
-      B10 -- Yes --> C1["🔓 Trigger Stage 2 Booking Link"]
-    
-      %% STAGE 2
-      C1 --> C2["👨‍👩‍👧 Guardian Books & Pays €500"]
-      C2 --> C3["🧾 Email Receipt + WA Confirmation"]
-      C3 --> C4["📆 WA Reminder 1 Day Before<br><sub>(Include Room# for Mary)</sub>"]
-      C4 --> C5["🔎 Determine Age & Prior Assessment"]
-      C5 --> C6{"Child < 12?"}
-      C6 -- Yes --> C7{"Prior ADHD or Psycho-ed Assessment?"}
-      C7 -- Yes --> C8["👨‍⚕️ Assign Leo"]
-      C7 -- No --> C9["👩‍⚕️ Assign Mary"]
-      C6 -- No --> C8
-      C8 --> C10["📅 Check Clinician & Room Availability"]
-      C9 --> C10
-      C10 --> C11["📝 Prefill Stage 2 Proforma"]
-      C11 --> C12["👥 In-Person Assessment (1hr)"]
-      C12 --> C13["🖊️ Clinician Completes & Signs Proforma"]
-      C13 --> C14{"✅ Stage 2 Complete?"}
-      C14 -- No --> C15["❌ Block & Flag to CC"]
-      C14 -- Yes --> C16["🧑‍⚕️ Clinician Decision Point"]
-    
-      %% INTERIM PATH AND CONNERS TRACKER
-      C16 --> E1["📝 Issue Interim Report (Optional)"]
-      C16 --> C17["🔎 Check Conners Tracker<br><sub>(P + T + C if >8)</sub>"]
-      C17 --> C18{"✔️ All Conners Forms Received?"}
-      C18 -- No --> C19["📨 WA Reminder + Wait 7 Days"]
-      C19 --> C17
-      C18 -- Yes --> D1["🔓 Trigger Stage 3 Booking Link"]
-    
-      %% STAGE 3
-      D1 --> D2["👨‍👩‍👧 Guardian Books & Pays €850"]
-      D2 --> D3["🧾 Email Receipt + WA Confirmation"]
-      D3 --> D4["📆 WA Reminder 1 Day Before<br><sub>(Date/Time/Location)</sub>"]
-      D4 --> D5["👥 Final In-Person Assessment (1hr)"]
-      D5 --> D6["📝 Complete Stage 3 Proforma"]
-      D6 --> D7{"✅ Stage 3 Proforma Complete?"}
-      D7 -- No --> D8["❌ Flag to CC + Recheck in 7 Days"]
-      D7 -- Yes --> F1["📄 Generate Final Report"]
-    
-      %% REPORT HANDLING
-      E1 --> E2["🔐 Encrypt PDF with DOB"]
-      F1 --> F2["🔐 Encrypt PDF with DOB"]
-      E2 --> E3["📤 Email to G1 + Password Instructions"]
-      F2 --> F3["📤 Email to G1 + Password Instructions"]
-      E3 --> E4["🕓 Log Report Dispatch Timestamp"]
-      F3 --> F4["🕓 Log Report Dispatch Timestamp"]
-    
-      %% NEXT STEPS
-      E4 --> G1["📌 Clinician Selects Next Steps"]
-      F4 --> G1
-      G1 --> G2["📄 School Letter<br><sub>(If No Prior Dx)</sub>"]
-      G1 --> G3["📑 Route to Phase 3<br><sub>(Additional Assessments)</sub>"]
-      G1 --> G4["🌱 Aftercare Recommendation"]
-      G4 --> A1["🧠 OT"]
-      G4 --> A2["💬 CBT"]
-      G4 --> A3["🧘 Psychotherapy"]
-      G4 --> A4["💊 Medication"]
-      G4 --> A5["💊 Medication + CBT"]
-      G4 --> A6["🗣️ SLT"]
-      G4 --> A7["❌ No Aftercare"]
-      G4 --> A8["📨 Other (To Be Decided)"]
-    
-      %% STYLES
-      classDef booking fill:#e8f5e9,stroke:#388e3c,stroke-width:1px
-      classDef email fill:#fff3e0,stroke:#f57c00,stroke-width:1px
-      classDef logic fill:#e3f2fd,stroke:#1976d2,stroke-width:1px
-      classDef warning fill:#ffebee,stroke:#d32f2f,stroke-width:1px
-      classDef report fill:#ede7f6,stroke:#512da8,stroke-width:1px
-      classDef aftercare fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1px
-    
-      class B1,B2,C1,C2,D1,D2 booking
-      class B3,C3,D3,E3,F3 email
-      class FDCheck,B10,C14,C18,D7 logic
-      class B11,C15,D8 warning
-      class E1,F1,E2,F2,E4,F4 report
-      class G4,A1,A2,A3,A4,A5,A6,A7,A8 aftercare
+      flowchart TD
+
+  %% STAGE 1
+  Start["🔓 Phase 1 Approved"] --> SendStage1Booking["📩 Send Stage 1 Booking Link via WhatsApp"]
+  SendStage1Booking --> GuardianBooksStage1["👨‍👩‍👧 Guardian Books & Pays €500"]
+  GuardianBooksStage1 --> Stage1Receipt["🧾 Email Receipt + WA Confirmation"]
+  Stage1Receipt --> NotifyGP["📬 Notify GP<br><sub>(Proposed: Email Automation)</sub>"]
+
+  %% COMBINED FAMILY DETAILS + CONNERS
+  NotifyGP --> SendCombinedEmail["📦 Email Family Details Form + Conners Links<br><sub>One-Click Template</sub>"]
+  SendCombinedEmail --> CreateMHSProfile["🌐 MHS API: Auto-Create Patient"]
+  CreateMHSProfile --> GenerateConnersLinks["🔗 MHS Generates Conners Links<br><sub>Parent / Child / Teacher</sub>"]
+  GenerateConnersLinks --> StoreLinksInSalesforce["📥 Store MHS Links in Salesforce"]
+  StoreLinksInSalesforce --> AutoFillConnersEmail["📧 Auto-Fill Email Template with Conners + Family Form"]
+  AutoFillConnersEmail --> SendToGuardian["📤 Email Sent to Guardian"]
+
+  %% FAMILY FORM TRACKING
+  SendCombinedEmail --> StartFamilyTracker["📊 Start Family Details Tracker"]
+  StartFamilyTracker --> WaitForFamilyForm["🕒 Wait 7 Days"]
+  WaitForFamilyForm --> CheckFamilyForm{"✔️ Family Details Form Received?"}
+  CheckFamilyForm -- No --> ReminderFamilyForm["📨 WA Reminder to Submit Form"]
+  ReminderFamilyForm --> RecheckFamilyForm["🔁 Recheck After Reminder"]
+  RecheckFamilyForm --> CheckFamilyForm
+  CheckFamilyForm -- Yes --> ClinicianIntakeCall
+
+  %% INTAKE CALL
+  ClinicianIntakeCall["📞 Clinician Intake Call"] --> FillProformaStage1["📝 Fill Stage 1 Proforma"]
+  FillProformaStage1 --> Stage1CompleteCheck["✅ Stage 1 Complete?"]
+  Stage1CompleteCheck --> ClinicianDecisionStage1{"Clinician Decision: Continue or Divert to Phase 3?"}
+  ClinicianDecisionStage1 -- Continue --> SendStage2Booking["🔓 Trigger Stage 2 Booking Link"]
+  ClinicianDecisionStage1 -- Divert --> DivertAfterStage1["🔎 Additional Assessment after Stage 1"]
+
+  %% STAGE 2
+  SendStage2Booking --> GuardianBooksStage2["👨‍👩‍👧 Guardian Books & Pays €500"]
+  GuardianBooksStage2 --> Stage2Receipt["🧾 Email Receipt + WA Confirmation"]
+  Stage2Receipt --> Stage2Reminder["📆 WA Reminder 1 Day Before<br><sub>(Include Room# for Mary)</sub>"]
+  Stage2Reminder --> DetermineAgeAssessment["🔎 Determine Age & Prior Assessment"]
+  DetermineAgeAssessment --> IsChildUnder12{"Child < 12?"}
+  IsChildUnder12 -- Yes --> PriorAssessmentCheck{"Prior ADHD or Psycho-ed Assessment?"}
+  PriorAssessmentCheck -- Yes --> AssignLeo["👨‍⚕️ Assign Leo"]
+  PriorAssessmentCheck -- No --> AssignMary["👩‍⚕️ Assign Mary"]
+  IsChildUnder12 -- No --> AssignLeo
+  AssignLeo --> CheckRoomAvailability["📅 Check Clinician & Room Availability"]
+  AssignMary --> CheckRoomAvailability
+  CheckRoomAvailability --> PrefillProformaStage2["📝 Prefill Stage 2 Proforma"]
+  PrefillProformaStage2 --> InPersonAssessmentStage2["👥 In-Person Assessment (1hr)"]
+  InPersonAssessmentStage2 --> CompleteProformaStage2["🖊️ Clinician Completes & Signs Proforma"]
+  CompleteProformaStage2 --> Stage2CompleteCheck["✅ Stage 2 Complete?"]
+  Stage2CompleteCheck --> ClinicianDecisionStage2{"Clinician Decision: Continue or Divert to Phase 3?"}
+  ClinicianDecisionStage2 -- Continue --> ClinicianDecisionPoint["🧑‍⚕️ Clinician Decision Point"]
+  ClinicianDecisionStage2 -- Divert --> DivertAfterStage2["🔎 Additional Assessment after Stage 2"]
+
+  %% INTERIM REPORT + CONNERS TRACKER
+  ClinicianDecisionPoint --> IssueInterimReport["📝 Issue Interim Report (Optional)"]
+  IssueInterimReport --> EncryptInterimReport["🔐 Encrypt Interim Report with PrimaHealthID"]
+  EncryptInterimReport --> CheckConnersTracker
+  ClinicianDecisionPoint --> CheckConnersTracker["🔎 Check Conners Tracker<br><sub>(P + T + C if ≥8)</sub>"]
+  CheckConnersTracker --> AllConnersReceived{"✔️ All Conners Forms Received?"}
+  AllConnersReceived -- No --> ReminderConners["📨 WA Reminder + Wait 7 Days"]
+  ReminderConners --> CheckConnersTracker
+  AllConnersReceived -- Yes --> SendStage3Booking["🔓 Trigger Stage 3 Booking Link"]
+
+  %% STAGE 3
+  SendStage3Booking --> GuardianBooksStage3["👨‍👩‍👧 Guardian Books & Pays €850"]
+  GuardianBooksStage3 --> Stage3Receipt["🧾 Email Receipt + WA Confirmation"]
+  Stage3Receipt --> Stage3Reminder["📆 WA Reminder 1 Day Before<br><sub>(Date/Time/Location)</sub>"]
+  Stage3Reminder --> FinalAssessment["👥 Final In-Person Assessment (1hr)"]
+  FinalAssessment --> FillProformaStage3["📝 Complete Stage 3 Proforma"]
+  FillProformaStage3 --> GenerateFinalReport["📄 Generate Final Report"]
+  GenerateFinalReport --> EncryptFinalReport["🔐 Encrypt Final Report with PrimaHealthID"]
+  EncryptFinalReport --> EmailFinalReport["📤 Email to G1 + Password Instructions"]
+  EmailFinalReport --> LogDispatchTimestamp["🕓 Log Report Dispatch Timestamp"]
+
+  %% PHASE 3: ADDITIONAL ASSESSMENTS
+  DivertAfterStage1 --> PreliminaryReport1["📄 Preliminary Report Issued (Clock Stops)"]
+  DivertAfterStage2 --> PreliminaryReport2["📄 Preliminary Report Issued (Clock Stops)"]
+  PreliminaryReport1 --> SendStage3Booking
+  PreliminaryReport2 --> SendStage3Booking
+
+  %% PHASE 4: AFTERCARE
+  LogDispatchTimestamp --> ClinicianNextSteps["📌 Clinician Selects Next Steps"]
+  ClinicianNextSteps --> SchoolLetter["📄 School Letter<br><sub>(If No Prior Dx)</sub>"]
+  ClinicianNextSteps --> FurtherAssessments["📑 Route to Further Assessments<br><sub>(Phase 3, if needed)</sub>"]
+  ClinicianNextSteps --> AftercareRecommendation["🌱 Aftercare Recommendation"]
+  AftercareRecommendation --> OT["🧠 OT"]
+  AftercareRecommendation --> CBT["💬 CBT"]
+  AftercareRecommendation --> Psychotherapy["🧘 Psychotherapy"]
+  AftercareRecommendation --> Medication["💊 Medication"]
+  AftercareRecommendation --> MedicationCBT["💊 Medication + CBT"]
+  AftercareRecommendation --> SLT["🗣️ SLT"]
+  AftercareRecommendation --> NoAftercare["❌ No Aftercare"]
+  AftercareRecommendation --> OtherAftercare["📨 Other (To Be Decided)"]
+  ClinicianNextSteps --> PsychiatryAppointment["👨‍⚕️ Psychiatry Appointment<br><sub>(Additional Cost)</sub>"]
+
+  %% STYLES
+  classDef booking fill:#e8f5e9,stroke:#388e3c,stroke-width:1px
+  classDef email fill:#fff3e0,stroke:#f57c00,stroke-width:1px
+  classDef logic fill:#e3f2fd,stroke:#1976d2,stroke-width:1px
+  classDef warning fill:#ffebee,stroke:#d32f2f,stroke-width:1px
+  classDef report fill:#ede7f6,stroke:#512da8,stroke-width:1px
+  classDef aftercare fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1px
+
+  class SendStage1Booking,GuardianBooksStage1,SendStage2Booking,GuardianBooksStage2,SendStage3Booking,GuardianBooksStage3 booking
+  class Stage1Receipt,Stage2Receipt,Stage3Receipt,EmailFinalReport email
+  class CheckFamilyForm,Stage1CompleteCheck,Stage2CompleteCheck,AllConnersReceived logic
+  class GenerateFinalReport,IssueInterimReport,EncryptFinalReport,EncryptInterimReport,LogDispatchTimestamp report
+  class AftercareRecommendation,OT,CBT,Psychotherapy,Medication,MedicationCBT,SLT,NoAftercare,OtherAftercare,PsychiatryAppointment aftercare
+
     </pre>
     {% endraw %}
     
