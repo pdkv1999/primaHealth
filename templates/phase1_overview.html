@@ -41,12 +41,12 @@
 flowchart TD
     Start(["Start: New Enquiry<br>(Phone, Email, GP Referral, Webform, WhatsApp)"]) --> Source{"What is the source?"}
 
-    Source -- Phone Call --> M1["Send: Phone call received (No SC No GP Referral)<br><sub>📝 Email</sub>"]
-    Source -- Voicemail --> M2["Send: Missed Call (Voicemail)<br><sub>📝 Email</sub>"]
-    Source -- No Voicemail --> M3["Send: Missed Call (No Voicemail)<br><sub>📝 Email</sub>"]
-    Source -- Webform --> M4["Send: Callback Request<br><sub>📝 Email</sub>"]
-    Source -- Email --> M5["Send: Email Request (Attach Parent Info)<br><sub>📝 Email</sub>"]
-    Source -- GP Referral --> M6["Send: GP Referral Received (No Screening Call done)<br><sub>📝 Email</sub>"]
+    Source -- Phone Call --> M1["Send: Phone call received (No SC No GP Referral)<br><sub>📝 WA</sub>"]
+    Source -- Voicemail --> M2["Send: Missed Call (Voicemail)<br><sub>📝 WA</sub>"]
+    Source -- No Voicemail --> M3["Send: Missed Call (No Voicemail)<br><sub>📝 WA</sub>"]
+    Source -- Webform --> M4["Send: Callback Request<br><sub>📝 WA</sub>"]
+    Source -- Email --> M5["Send: Email Request (Attach Parent Info)<br><sub>📝 WA and Email</sub>"]
+    Source -- GP Referral --> M6["Send: GP Referral Received (No Screening Call done)<br><sub>📝 WA and Email</sub>"]
 
     M1 --> ExistingCheck{"Is it an existing record?"}
     M2 --> ExistingCheck
@@ -56,17 +56,11 @@ flowchart TD
     M6 --> ExistingCheck
 
     ExistingCheck -- Yes --> LoadRec["Load Patient Record"]
-    LoadRec --> M0
+    LoadRec --> GPCheck
     ExistingCheck -- No --> CreateRec["Create Patient Record"]
     CreateRec --> M0
 
-    M0["Send: WA Consent Request via Email<br><sub>📝 Email</sub>"] --> Wait24H["⏳ Wait 24 Hours for Email Response"]
-    Wait24H --> ConsentResponse{"Email Response Received?"}
-    ConsentResponse -- Yes, WA Consent Given --> CRMUpdateYes["✅ Update CRM: Consent Given – Proceed via WA"]
-    ConsentResponse -- No or Declined --> CRMUpdateNo["❌ Update CRM: Consent Not Given – Proceed via Email Only"]
-
-    CRMUpdateYes --> GPCheck{"Is GP Referral Received?"}
-    CRMUpdateNo --> GPCheck
+    M0["Send: PrimaHealth Reference Number<br><sub>📝 WA</sub>"] --> GPCheck{"Is GP Referral Received?"}
 
     GPCheck -- Yes --> M19["Send: GP Referral Received, Haven’t booked SC<br><sub>📝 WA if consented, else Email</sub>"]
     M19 --> SCBookedNow{"Is Screening Call Already Booked?"}
