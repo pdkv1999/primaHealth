@@ -113,15 +113,18 @@
           WaitGP7a -- No Response --> M21a2["Send: SC Completed – GP Referral Pending (2nd)<br><sub>📝 WA if consented, else Email</sub>"]
           M21a2 --> WaitGP7b["⏳ Wait 7 Days or Until Received"]
           WaitGP7b -- Referral Received --> InfoCheck
-          WaitGP7b -- No Response --> EscalateGP["⚠️ Escalate to CC: GP Referral Still Pending"] --> RedList
+          WaitGP7b -- No Response --> EscalateGP["⚠️ Escalate to CC: GP Referral Still Pending"] --> FlagCheck
           
-          GPCheck2 -- Yes --> InfoCheck{"Any missing documents?"}
+          GPCheck2 -- Yes --> InfoCheck{"Any missing documents?"}                 
       
           %% ===== RED FLAGS =====
-          RedList["Red Flag Types:<br>• CAMHS<br>• Eating Disorder<br>• Non-Verbal Child<br>• Suicide Attempts<br>• Can't Attend In-Person<br>• Over 18<br>• AP Clinical Concern"] --> NotSuitableReason{"Reason for Not Proceeding?"}
+          FlagCheck{"Red Flags Identified?"}
+          FlagCheck -- Yes --> RedList["Red Flag Types:<br>• CAMHS<br>• Eating Disorder<br>• Non-Verbal Child<br>• Suicide Attempts<br>• Can't Attend In-Person<br>• Over 18<br>• AP Clinical Concern"]
+          RedList --> NotSuitableReason{"Reason for Not Proceeding?"}
           NotSuitableReason -- CAMHS --> SendCloseCAMHS["Send: CAMHS Engagement<br><sub>📝 WA if consented, else Email</sub>"] --> CloseRedFlag["Sad End: Red Flag – Do Not Proceed"]
           NotSuitableReason -- Over 18 --> SendCloseOver18["Send: Services Not Suitable – Over 18<br><sub>📝 WA if consented, else Email</sub>"] --> CloseRedFlag
           NotSuitableReason -- Other Red Flags --> SendCloseServiceNotSuitable["Send: Red Flag other than CAMHS<br><sub>📝 WA if consented, else Email</sub>"] --> CloseRedFlag
+          FlagCheck -- No --> InfoCheck
       
           %% ===== PREVIOUS REPORTS: escalate only (no closure), early-exit on receive =====
           InfoCheck -- Yes --> M22a["Send: SC Completed – Awaiting Previous Reports<br><sub>📝 WA if consented, else Email</sub>"]
