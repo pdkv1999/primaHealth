@@ -39,131 +39,128 @@
     <pre class="mermaid">
       {% raw %}
       flowchart TD
+          %% ===== PRE-EXISTING FLOW (unchanged up to APExec) =====
           Start(["Start: New Enquiry<br>(Phone, Email, GP Referral, Webform, WhatsApp)"]) --> Source{"What is the source?"}
-      
           Source -- Phone Call --> M1["Send: New Enquiry – Phone Call Received<br><sub>📝 WA</sub>"]
           Source -- Voicemail --> M2["Send: Missed Call – Voicemail<br><sub>📝 WA</sub>"]
           Source -- No Voicemail --> M3["Send: Missed Call – No Voicemail<br><sub>📝 WA</sub>"]
           Source -- Webform --> M4["Send: Webform – Callback Request<br><sub>📝 WA</sub>"]
           Source -- Email --> M5["Send: Email – Info Request (Attach Parent Info)<br><sub>📝 WA and Email</sub>"]
           Source -- GP Referral --> M6["Send: GP Referral Received – No Screening Call<br><sub>📝 WA and Email</sub>"]
-      
+    
           M1 --> ExistingCheck{"Is it an existing record?"}
           M2 --> ExistingCheck
           M3 --> ExistingCheck
           M4 --> ExistingCheck
           M5 --> ExistingCheck
           M6 --> ExistingCheck
-      
+    
           ExistingCheck -- Yes --> LoadRec["Load Patient Record"]
           LoadRec --> GPCheck
           ExistingCheck -- No --> CreateRec["Create Patient Record"]
           CreateRec --> M0
-      
+    
           M0["Send: PrimaHealth Reference Number<br><sub>📝 WA</sub>"] --> GPCheck{"Is GP Referral Received?"}
-      
           GPCheck -- Yes --> M19["Send: GP Referral Received – Haven’t Booked Screening Call<br><sub>📝 WA if consented, else Email</sub>"]
           M19 --> SCBookedNow{"Is Screening Call Already Booked?"}
           GPCheck -- No --> SCBookedNow
-      
+    
           SCBookedNow -- Yes --> M9["Send: Screening Call – Booking Confirmation<br><sub>📝 WA if consented, else Email</sub>"]
           SCBookedNow -- No --> WaitMore["WaitMore"]
-      
           WaitMore -- 7 Days No Response --> M7["Send: No Contact – 7 Day Follow-up<br><sub>📝 WA if consented, else Email</sub>"]
           M7 --> CallAttempt["📞 Flag CC to make a Phone Call Attempt after 7 days"]
           CallAttempt --> CallAnswered{"Was the call answered?"}
-      
           CallAnswered -- Yes, Wants to proceed --> BookNowCheck{"Did they book Screening Call immediately?"}
           BookNowCheck -- Yes --> M9
           BookNowCheck -- No --> FollowUp14Days
-      
           CallAnswered -- Yes, Does NOT want to proceed --> SendCloseFamily["Send: Family Not Proceeding<br><sub>📝 WA if consented, else Email</sub>"] --> CloseFamily["Sad End: Close – Family Not Proceeding"]
-          CallAnswered -- Yes, Will book later --> RemindWA["Wait for 7 more days"]
-          RemindWA --> FollowUp14Days
-          CallAnswered -- No --> NoAnswerFollowup["Wait for 7 more days"]
-          NoAnswerFollowup --> FollowUp14Days
-      
+          CallAnswered -- Yes, Will book later --> RemindWA["Wait for 7 more days"] --> FollowUp14Days
+          CallAnswered -- No --> NoAnswerFollowup["Wait for 7 more days"] --> FollowUp14Days
           FollowUp14Days["Send: No Contact – 14 Day Follow-up<br><sub>📝 WA if consented, else Email</sub>"]
           FollowUp14Days -- 7 More Days No Response --> SendCloseNoContact["Send: No Contact from Family<br><sub>📝 WA if consented, else Email</sub>"] --> Close1["Sad End: Auto-Close – No Booking"]
           FollowUp14Days -- SC Booked --> M9
-      
+    
           M9 --> ChildCheck{"Two Children's Names Provided?"}
-          ChildCheck -- Yes --> M20["Send: Screening Call – Two Children’s Names Confirmed<br><sub>📝 WA if consented, else Email</sub>"]
-          M20 --> APAssign["Assign to AP Calendar Queue"]
+          ChildCheck -- Yes --> M20["Send: Screening Call – Two Children’s Names Confirmed<br><sub>📝 WA if consented, else Email</sub>"] --> APAssign["Assign to AP Calendar Queue"]
           ChildCheck -- No --> APAssign
-      
           APAssign --> APExec["AP Executes Screening Call (Phone)"]
-          APExec --> CheckSchoolFields{"Are School Name, Email, or Teacher Name missing in CRM?"}
-          
-          %% ===== SCHOOL DETAILS: 2 reminders, early-exit on receive, then escalate =====
-          CheckSchoolFields -- Yes --> MFollowSchool1["Send: School Details – Follow-up Request (1st)<br><sub>📝 WA if consented, else Email</sub>"]
-          MFollowSchool1 --> WaitSchool7a["⏳ Wait 7 Days or Until Received"]
-          WaitSchool7a -- Details Received --> GPCheck2
-          WaitSchool7a -- No Response --> MFollowSchool2["Send: School Details – Follow-up Request (2nd)<br><sub>📝 WA if consented, else Email</sub>"]
-          MFollowSchool2 --> WaitSchool7b["⏳ Wait 7 Days or Until Received"]
-          WaitSchool7b -- Details Received --> GPCheck2
-          WaitSchool7b -- No Response --> EscalateSchool["⚠️ Escalate to CC: School Details Still Missing"] --> GPCheck2
-          
-          CheckSchoolFields -- No --> GPCheck2{"Is GP Referral Received?"}
-      
-          %% ===== GP REFERRAL PENDING: 2 reminders, early-exit on receive, then escalate =====
-          GPCheck2 -- No --> M21a1["Send: SC Completed – GP Referral Pending (1st)<br><sub>📝 WA if consented, else Email</sub>"]
-          M21a1 --> WaitGP7a["⏳ Wait 7 Days or Until Received"]
-          WaitGP7a -- Referral Received --> InfoCheck
-          WaitGP7a -- No Response --> M21a2["Send: SC Completed – GP Referral Pending (2nd)<br><sub>📝 WA if consented, else Email</sub>"]
-          M21a2 --> WaitGP7b["⏳ Wait 7 Days or Until Received"]
-          WaitGP7b -- Referral Received --> InfoCheck
-          WaitGP7b -- No Response --> EscalateGP["⚠️ Escalate to CC: GP Referral Still Pending"] --> FlagCheck
-          
-          GPCheck2 -- Yes --> InfoCheck{"Any missing documents?"}                 
-      
-          %% ===== RED FLAGS =====
-          FlagCheck{"Red Flags Identified?"}
+    
+          %% ==================== PARALLEL START: 4 CHECKS ====================
+          APExec --> ParallelStart{"Run 4 checks in parallel"}
+    
+          %% ---- SCHOOL DETAILS TRACK ----
+          ParallelStart --> SchoolTrackStart["School Details Track"]
+          SchoolTrackStart --> CheckSchoolFields{"Are School Name, Email, or Teacher Name missing in CRM?"}
+          CheckSchoolFields -- Yes --> MFollowSchool1["Send: School Details – Follow-up Request (1st)<br><sub>📝 WA if consented, else Email</sub>"] --> WaitSchool7a["⏳ Wait 7 Days or Until Received"]
+          WaitSchool7a -- Details Received --> SchoolDone["School Track Complete"]
+          WaitSchool7a -- No Response --> MFollowSchool2["Send: School Details – Follow-up Request (2nd)<br><sub>📝 WA if consented, else Email</sub>"] --> WaitSchool7b["⏳ Wait 7 more Days"]
+          WaitSchool7b -- Details Received --> SchoolDone
+          %% CHANGED: do not connect escalate to SchoolDone
+          WaitSchool7b -- No Response --> EscalateSchool["⚠️ Escalate to CC: School Details Still Missing"]
+          CheckSchoolFields -- No --> SchoolDone
+    
+          %% ---- GP REFERRAL TRACK ----
+          ParallelStart --> GPTrackStart["GP Referral Track"]
+          GPTrackStart --> GPCheck2{"Is GP Referral Received?"}
+          GPCheck2 -- Yes --> GPDone["GP Track Complete"]
+          GPCheck2 -- No --> M21a1["Send: SC Completed – GP Referral Pending (1st)<br><sub>📝 WA if consented, else Email</sub>"] --> WaitGP7a["⏳ Wait 7 Days or Until Received"]
+          WaitGP7a -- Referral Received --> GPDone
+          WaitGP7a -- No Response --> M21a2["Send: SC Completed – GP Referral Pending (2nd)<br><sub>📝 WA if consented, else Email</sub>"] --> WaitGP7b["⏳ Wait 7 more Days"]
+          WaitGP7b -- Referral Received --> GPDone
+          %% CHANGED: do not connect escalate to GPDone
+          WaitGP7b -- No Response --> EscalateGP["⚠️ Escalate to CC: GP Referral Still Pending"]
+    
+          %% ---- RED FLAGS TRACK ----
+          ParallelStart --> RFTrackStart["Red Flags Track"]
+          RFTrackStart --> FlagCheck{"Red Flags Identified?"}
           FlagCheck -- Yes --> RedList["Red Flag Types:<br>• CAMHS<br>• Eating Disorder<br>• Non-Verbal Child<br>• Suicide Attempts<br>• Can't Attend In-Person<br>• Over 18<br>• AP Clinical Concern"]
           RedList --> NotSuitableReason{"Reason for Not Proceeding?"}
           NotSuitableReason -- CAMHS --> SendCloseCAMHS["Send: CAMHS Engagement<br><sub>📝 WA if consented, else Email</sub>"] --> CloseRedFlag["Sad End: Red Flag – Do Not Proceed"]
           NotSuitableReason -- Over 18 --> SendCloseOver18["Send: Services Not Suitable – Over 18<br><sub>📝 WA if consented, else Email</sub>"] --> CloseRedFlag
           NotSuitableReason -- Other Red Flags --> SendCloseServiceNotSuitable["Send: Red Flag other than CAMHS<br><sub>📝 WA if consented, else Email</sub>"] --> CloseRedFlag
-          FlagCheck -- No --> InfoCheck
-      
-          %% ===== PREVIOUS REPORTS: escalate only (no closure), early-exit on receive =====
-          InfoCheck -- Yes --> M22a["Send: SC Completed – Awaiting Previous Reports<br><sub>📝 WA if consented, else Email</sub>"]
-          M22a --> DocWait["⏳ Wait 14 Days or Until Received"]
-          DocWait -- Docs Received --> G2Check{"Is G2 Consent Required?"}
-          DocWait -- No Response --> EscalateMissing["⚠️ Escalate to CC: Missing Previous Reports"] --> HoldMissing["Status: Awaiting Documents"]
-          InfoCheck -- No --> G2Check
-      
-          %% ===== G2 CONSENT: proceed to CM Review only if received; early-exit waits =====
-          G2Check -- Yes --> M12["Send: Consent – G2 Required<br><sub>📝 WA if consented, else Email</sub>"]
-          M12 --> Wait7DaysG2a["⏳ Wait 7 Days or Until Received"]
-          Wait7DaysG2a -- Consent Received --> M14["Send: Consent – G2 Received<br><sub>📝 WA if consented, else Email</sub>"] --> CMReview["Care Manager Review"]
-          Wait7DaysG2a -- No Response --> M13["Send: Consent – G2 Follow-up<br><sub>📝 WA if consented, else Email</sub>"]
-          M13 --> Wait7DaysG2b["⏳ Wait 7 Days or Until Received"]
-          Wait7DaysG2b -- Consent Received --> M14 --> CMReview
+          FlagCheck -- No --> RFDone["Red Flags Track Complete"]
+    
+          %% ---- G2 CONSENT TRACK ----
+          ParallelStart --> G2TrackStart["G2 Consent Track"]
+          G2TrackStart --> G2CheckP{"Is G2 Consent Required?"}
+          G2CheckP -- No --> G2Done["G2 Track Complete"]
+          G2CheckP -- Yes --> M12["Send: Consent – G2 Required<br><sub>📝 WA if consented, else Email</sub>"] --> Wait7DaysG2a["⏳ Wait 7 Days or Until Received"]
+          %% CHANGED: route both consent-received paths to M14, then a single arrow M14 --> G2Done
+          Wait7DaysG2a -- Consent Received --> M14["Send: Consent – G2 Received<br><sub>📝 WA if consented, else Email</sub>"]
+          Wait7DaysG2a -- No Response --> M13["Send: Consent – G2 Follow-up<br><sub>📝 WA if consented, else Email</sub>"] --> Wait7DaysG2b["⏳ Wait 7 more Days"]
+          Wait7DaysG2b -- Consent Received --> M14
           Wait7DaysG2b -- No Response --> HoldStatus["Status: Awaiting G2 Consent"]
-      
-          G2Check -- No --> CMReview
-      
+          M14 --> G2Done
+    
+          %% ---- JOIN: all 4 tracks must complete ----
+          SchoolDone --> AllChecksDone["All 4 checks complete"]
+          GPDone --> AllChecksDone
+          RFDone --> AllChecksDone
+          G2Done --> AllChecksDone
+    
+          %% ==================== AFTER PARALLEL: PREVIOUS REPORTS, THEN CM REVIEW ====================
+          AllChecksDone --> InfoCheck{"Any previous reports missing?"}
+          InfoCheck -- No --> CMReview["Care Manager Review"]
+          InfoCheck -- Yes --> M22a["Send: SC Completed – Awaiting Previous Reports<br><sub>📝 WA if consented, else Email</sub>"] --> DocWait["⏳ Wait 14 Days or Until Received"]
+          DocWait -- Docs Received --> CMReview
+          DocWait -- No Response --> EscalateMissing["⚠️ Escalate to CC: Missing Previous Reports"] --> HoldMissing["Status: Awaiting Documents"]
+    
           %% ===== CM REVIEW =====
           CMReview --> Decision{"Care Manager Decision"}
-          Decision -- Accepted --> M17["Send: GP Referral Confirmed – SC Done<br><sub>📝 WA if consented, else Email</sub>"]
-          M17 --> FinalPrep["Assessment Ready"]
-          FinalPrep --> M18["Send: Assessment – Next Steps Notification<br><sub>📝 WA if consented, else Email</sub>"]
-          M18 --> HappyEnd["Happy End: Proceed to Assessment"]
-      
+          Decision -- Accepted --> M17["Send: GP Referral Confirmed – SC Done<br><sub>📝 WA if consented, else Email</sub>"] --> FinalPrep["Assessment Ready"] --> M18["Send: Assessment – Next Steps Notification<br><sub>📝 WA if consented, else Email</sub>"] --> HappyEnd["Happy End: Proceed to Assessment"]
           Decision -- Rejected --> SendCloseRejected["Send: Services Not Suitable – e.g. looking for other services/support<br><sub>📝 WA if consented, else Email</sub>"] --> Close3["Sad End: Rejected"]
           Decision -- On Hold --> HoldStatusMore["Status: Awaiting Additional Info"]
-      
+    
           %% ===== Styling =====
           class M0,M1,M2,M3,M4,M5,M6,M7,M9,M12,M13,M14,M17,M18,M19,M20,M21a1,M21a2,M22a,MFollowSchool1,MFollowSchool2,RemindWA,NoAnswerFollowup,CallAttempt,FollowUp14Days,SendCloseNoContact,SendCloseFamily,SendCloseRejected,SendCloseCAMHS,SendCloseOver18,SendCloseServiceNotSuitable message
           class Close1,Close3,CloseRedFlag,CloseFamily sadend
-          class WaitSchool7a,WaitSchool7b,WaitGP7a,WaitGP7b,DocWait,Wait7DaysG2a,Wait7DaysG2b,EscalateSchool,EscalateGP,EscalateMissing,HoldMissing,HoldStatus,HoldStatusMore,FlagCheck,InfoCheck,GPCheck,GPCheck2,ExistingCheck,SCBookedNow,BookNowCheck,ChildCheck,Decision,RedList,NotSuitableReason logic
-          
+          class WaitSchool7a,WaitSchool7b,WaitGP7a,WaitGP7b,DocWait,Wait7DaysG2a,Wait7DaysG2b,EscalateSchool,EscalateGP,EscalateMissing,HoldMissing,HoldStatus,HoldStatusMore,FlagCheck,InfoCheck,GPCheck,GPCheck2,ExistingCheck,SCBookedNow,BookNowCheck,ChildCheck,Decision,RedList,NotSuitableReason,APExec,ParallelStart,SchoolTrackStart,GPTrackStart,RFTrackStart,G2TrackStart,SchoolDone,GPDone,RFDone,G2Done,AllChecksDone,CMReview logic
+    
           classDef message fill:#fef6e4,stroke:#c4a000,stroke-width:1px
           classDef sadend fill:#ffe6e6,stroke:#cc0000,stroke-width:1px
           classDef logic fill:#e0f7fa,stroke:#00796b,stroke-width:1px
-      {% endraw %}
-      </pre>
+      {% endraw %}          
+    </pre>    
   </div>
   <script>
     mermaid.initialize({
