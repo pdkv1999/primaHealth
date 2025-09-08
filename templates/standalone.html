@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Standalone Project</title>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden; /* fit diagram into viewport */
+    }
+
+    header {
+      text-align: center;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem; /* larger title */
+      color: #2c3e50;
+    }
+
+    #mermaidChart {
+      height: calc(100% - 60px); /* use all remaining screen height */
+      width: 100%;
+      background: #fff;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .mermaid {
+      width: 100%;
+      height: 100%;
+      font-size: 20px; /* enlarged diagram text */
+    }
+
+    #mermaidChart svg {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Standalone Project</h1>
+  </header>
+
+  <div id="mermaidChart">
+    <div class="mermaid">
+flowchart LR
+
+%% ===== Patient Journey =====
+subgraph P["👩‍👦 Patient / Caregiver"]
+    P1(("📱 Request Assessment (WhatsApp)")):::start
+    P2["✍️ Provide Consent (Secure Form)"]:::process
+    P3["🎥 Join Online Session (Meet/Zoom/Teams)"]:::process
+    P4["📄 Upload Missing Documents (If requested)"]:::process
+    P5(("📑 Receive Final Report & Care Plan (Encrypted PDF)")):::terminator
+end
+
+%% ===== Clinician Workflow =====
+subgraph C["👩‍⚕️ Clinician"]
+    C1["🗓️ Schedule Appointment (Calendar Integration)"]:::process
+    C2["👥 Run Session with Parent"]:::process
+    C3{"🔎 Review Dashboard<br/>Missing / Pending / Ignore"}:::decision
+    C4["📤 One-Click Email<br/>(Auto-list missing fields)"]:::process
+    C5["📝 Review & Approve AI Draft Report"]:::process
+    C6(("✅ Finalise Report (Salesforce-ready)")):::terminator
+end
+
+%% ===== Central Engine =====
+subgraph CE["🛡️ Central Engine (C# / ASP.NET Orchestrator)"]
+    CE1["👤 Manage Access (Role-based)"]:::process
+    CE2["✔️ Validate Consent & Data Format"]:::process
+    CE3["📦 Route Inputs to AI & DBs"]:::process
+    CE4[/"🕒 Compliance Record (GDPR Audit Trail)"/]:::manual
+    CE5[("🗄️ Update Relational DB (Final validated fields)")]:::database
+end
+
+%% ===== AI Integration =====
+subgraph AIINT["🤖 AI Copilot – Integration"]
+    A1["🎙️ Capture Transcript/Audio"]:::process
+    A1a["🔄 Segregate Transcript → 1000+ structured fields"]:::process
+end
+
+%% ===== AI Analysis =====
+subgraph AIANA["🔎 AI Copilot – Analysis"]
+    A2["📊 Analyse & Categorise Fields"]:::process
+    A3["📤 Handle Missing Info<br/>• Auto-generate Email<br/>• Auto-fill"]:::process
+    A4["🖋️ Draft & Prepare Report"]:::process
+end
+
+%% ===== Data Management =====
+subgraph D["💾 Data Management"]
+    D1[("📂 NoSQL Store (Raw audio/transcripts)")]:::database
+    D2[("📊 Relational SQL (Final structured fields)")]:::database
+    D4[/"☁️ Google Drive (Parent uploads)"/]:::manual
+end
+
+%% ===== Governance =====
+subgraph G["⚖️ Governance & Security"]
+    G1["🔐 Privacy & Encryption (EU-only)"]:::process
+    G2["👥 SSO / MFA / Role Enforcement"]:::process
+    G3["📜 GDPR Compliance (Retention/Erasure)"]:::process
+    G4["✅ Consent Flags (Clinical vs Training use)"]:::process
+end
+
+%% ===== Salesforce =====
+subgraph SF["☁️ Salesforce Health Cloud (Phase 2)"]
+    SF1["🔄 Sync Final Report & Fields"]:::process
+    SF2["📊 Centralised Patient Records"]:::process
+    SF3(("📌 Care Plan Management")):::terminator
+end
+
+%% ===== Main Flow =====
+P1 --> P2 --> P3 --> C1 --> C2 --> CE1 --> CE2 --> CE3 --> A1 --> A1a --> A2 --> C3
+C3 -->|Request Info| C4 --> A3 --> D4
+C3 -->|Ignore| A4
+D4 --> CE5 --> D2 --> C5 --> C6 --> P5
+D2 --> SF1 --> SF2 --> SF3
+
+%% ===== Supporting Flows =====
+A1 --> D1
+%% REMOVED: A1a --> D2
+A4 --> CE5
+
+%% ===== Governance Connections =====
+CE4 -. log .-> G3
+CE2 -. consent .-> G4
+D2 -. EU-only storage .-> G1
+G2 -. enforcement .-> CE1
+
+%% ===== Styles =====
+classDef start fill:#b3ffb3,stroke:#2d862d,stroke-width:1.5px
+classDef terminator fill:#ffe0b3,stroke:#e67300,stroke-width:1.5px
+classDef process fill:#f0f7ff,stroke:#3366cc,stroke-width:1.2px
+classDef decision fill:#fff3cd,stroke:#ff9933,stroke-width:1.5px
+classDef database fill:#e6f7ff,stroke:#0080ff,stroke-width:1.5px
+classDef manual fill:#f9e6ff,stroke:#9933cc,stroke-width:1.5px,stroke-dasharray: 5 3
+classDef data fill:#e6fff9,stroke:#00b386,stroke-width:1.5px
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+</body>
+</html>

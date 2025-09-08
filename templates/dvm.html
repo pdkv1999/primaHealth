@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Standalone Project in DVM</title>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden; /* fit diagram into viewport */
+    }
+
+    header {
+      text-align: center;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem; /* larger title */
+      color: #2c3e50;
+    }
+
+    #mermaidChart {
+      height: calc(100% - 60px); /* use all remaining screen height */
+      width: 100%;
+      background: #fff;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .mermaid {
+      width: 100%;
+      height: 100%;
+      font-size: 20px; /* enlarged diagram text */
+    }
+
+    #mermaidChart svg {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Standalone Project in DVM</h1>
+  </header>
+
+  <div id="mermaidChart">
+    <div class="mermaid">
+
+        flowchart LR
+        %% ===== Acquisition Phase =====
+        subgraph ACQ["📥 Acquisition (Data In)"]
+            P1["Parent requests assessment (WhatsApp)"]
+            P2["Consent captured (Secure form)"]
+            P3["Online session with clinician (Video call)"]
+            P4["Session recorded + transcript generated"]
+            P5["Supporting documents uploaded (School reports, prior records)"]
+        end
+        %% ===== Integration Phase =====
+        subgraph INT["🔗 Integration (System Hub)"]
+            CE1["C# Central Engine (Control Hub) <br>• Orchestrates all data flows <br>• Ensures access + consent <br>• Routes into storage/databases"]
+            D1["Raw Storage <br>(Recordings + transcripts)"]
+            D2["Relational Database (SQL) <br>• Structured fields <br>• Patient records"]
+            AI1["AI Co-Pilot Connected <br>• Integrated into central hub <br>• Receives structured inputs"]
+        end
+        %% ===== Analysis Phase =====
+        subgraph ANA["🔎 Analysis (Insight Generation)"]
+            AI2["AI Co-Pilot (Analysis Mode) <br>• Highlight missing fields <br>• Turn conversations into structured insights <br>• Generate draft reports"]
+            C1["Clinician Dashboard <br>• See all fields at a glance <br>• Review & approve reports"]
+        end
+        %% ===== Delivery Phase =====
+        subgraph DEL["📤 Delivery (Value Out)"]
+            P7["Parent receives secure final report"]
+            SF1["Future: Salesforce Health Cloud <br>• Sync patient data & care plan <br>• Enable long-term tracking & follow-ups"]
+        end
+        %% ===== Flow Connections =====
+        P1 --> CE1
+        P2 --> CE1
+        P3 --> P4 --> CE1
+        P5 --> CE1
+        CE1 --> D1
+        CE1 --> D2
+        CE1 --> AI1 --> AI2 --> C1 --> P7
+        %% Salesforce Future
+        C1 --> SF1
+        %% ===== Styles =====
+        classDef acq fill:#FDFDFD,stroke:#9AA6B2,stroke-width:1.4px,rx:14,ry:14,color:#0F1C2E
+        classDef int fill:#EAF3FF,stroke:#6AA4FF,stroke-width:1.6px,rx:14,ry:14,color:#0B2C5A
+        classDef ana fill:#FFF5FF,stroke:#CC33CC,stroke-width:1.8px,rx:14,ry:14,color:#3A0B3A
+        classDef del fill:#E9FBF6,stroke:#22B8A6,stroke-width:1.6px,rx:14,ry:14,color:#0F3D37
+        classDef engine fill:#E8F3FF,stroke:#004C99,stroke-width:2px,rx:14,ry:14,color:#002244
+        classDef ai fill:#F3EDFF,stroke:#8B6CFF,stroke-width:1.8px,rx:14,ry:14,color:#251B5A
+        classDef data fill:#FFF5E6,stroke:#FF7F00,stroke-width:1.6px,rx:14,ry:14,color:#663300
+        class P1,P2,P3,P4,P5 acq
+        class CE1 engine
+        class D1,D2 data
+        class AI1 int
+        class AI2 ai
+        class C1 ana
+        class P7,SF1 del        
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+</body>
+</html>

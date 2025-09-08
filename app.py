@@ -46,6 +46,14 @@ def phase1():
 def phase1_overview():
     return render_template('phase1_overview.html')
 
+@app.route('/2026/standalone')
+def standalone():
+    return render_template('standalone.html')
+
+@app.route('/2026/dvm')
+def dvm():
+    return render_template('dvm.html')
+
 @app.route('/phase2')
 def phase2():
     return render_template('phase2.html')
