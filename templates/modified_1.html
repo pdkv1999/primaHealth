@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>modified_1 Project</title>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden; /* fit diagram into viewport */
+    }
+
+    header {
+      text-align: center;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem; /* larger title */
+      color: #2c3e50;
+    }
+
+    #mermaidChart {
+      height: calc(100% - 60px); /* use all remaining screen height */
+      width: 100%;
+      background: #fff;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .mermaid {
+      width: 100%;
+      height: 100%;
+      font-size: 20px; /* enlarged diagram text */
+    }
+
+    #mermaidChart svg {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>modified_1 Project</h1>
+  </header>
+
+  <div id="mermaidChart">
+<div class="mermaid">
+    flowchart LR
+
+%% ===== Lanes / Roles =====
+subgraph P[Parent or Guardian]
+  P1(("Talk with Admin 1")):::start
+end
+
+subgraph A1[Admin 1]
+  A1_REC["Conduct session"]:::process
+  A1_QA{"Transcript OK?"}:::decision
+end
+
+subgraph CE[C# Orchestrator]
+  CE_GATE["Handle request & confirmation"]:::process
+end
+
+subgraph VT[Voice & Transcription]
+  ELAB["ElevenLabs record voice"]:::process
+  T_EL["Transcript A (ElevenLabs)"]:::process
+  T_ALT["Transcript B (Alt STT)"]:::process
+  PY_DIFF["Python compare A vs B"]:::process
+  DIFF{"Difference detected?"}:::decision
+end
+
+subgraph ADM[Admin Resolution]
+  ADM_DECIDE{"Ignore difference or fix?"}:::decision
+  ADM_EDIT["Edit / merge final transcript"]:::process
+end
+
+subgraph A2[Admin 2]
+  A2_CHECK["Check missing items"]:::process
+  A2_FUP["Follow up if needed"]:::process
+end
+
+subgraph CL[Final Clinician]
+  CL_DRAFT["Draft report"]:::process
+  CL_REV["Review"]:::process
+  CL_SIGN(("Final sign off")):::terminator
+end
+
+subgraph D[Data]
+  D_RAW[(NoSQL - final transcript)]:::database
+  D_WORK[(Local DB - working copy)]:::database
+  D_FINAL[(SQL - approved copy)]:::database
+end
+
+subgraph OUT[Delivery]
+  SR["Structured report"]:::process
+  SYNC["Sync to EHR/CRM"]:::process
+  CARE(("Care plan")):::terminator
+end
+
+%% ===== Numbered Flow =====
+P1 -- "1" --> A1_REC
+A1_REC -- "2 request" --> CE_GATE
+CE_GATE -- "3 confirmation" --> A1_REC
+
+CE_GATE -- "4 send to record" --> ELAB
+ELAB -- "5 audio captured" --> CE_GATE
+
+CE_GATE -- "6 create Transcript A" --> T_EL
+CE_GATE -- "7 create Transcript B" --> T_ALT
+T_EL -- "8" --> PY_DIFF
+T_ALT -- "9" --> PY_DIFF
+PY_DIFF -- "10 compare" --> DIFF
+
+DIFF -- "11 yes" --> ADM_DECIDE
+ADM_DECIDE -- "12 ignore & proceed" --> D_RAW
+ADM_DECIDE -- "13 fix conflict" --> ADM_EDIT
+ADM_EDIT -- "14 final transcript" --> D_RAW
+DIFF -- "11 no (match)" --> D_RAW
+
+D_RAW -- "15" --> A1_QA
+A1_QA -- "16 no - need more info" --> CE_GATE
+CE_GATE -- "17 ask parent" --> P1
+P1 -- "18 reply" --> CE_GATE
+CE_GATE -- "19 attach update" --> D_RAW
+D_RAW -- "20 re-check" --> A1_QA
+
+A1_QA -- "21 yes" --> D_WORK
+D_WORK -- "22" --> A2_CHECK
+A2_CHECK -- "23 gaps found" --> A2_FUP
+A2_FUP -- "24 request to C#" --> CE_GATE
+CE_GATE -- "25 response back" --> A2_FUP
+A2_FUP -- "26 update data" --> D_WORK
+D_WORK -- "27 re-check" --> A2_CHECK
+
+A2_CHECK -- "28 no gaps" --> CL_DRAFT
+CL_DRAFT -- "29" --> CL_REV
+CL_REV -- "30" --> CL_SIGN
+CL_SIGN -- "31 save approved copy" --> D_FINAL
+D_FINAL -- "32 publish report" --> SR
+SR -- "33 sync" --> SYNC
+SYNC -- "34 final care plan" --> CARE
+
+%% ===== Styles =====
+classDef start fill:#b3ffb3,stroke:#2d862d,stroke-width:1.5px;
+classDef terminator fill:#ffe0b3,stroke:#e67300,stroke-width:1.5px;
+classDef process fill:#f0f7ff,stroke:#3366cc,stroke-width:1.2px;
+classDef decision fill:#fff3cd,stroke:#ff9933,stroke-width:1.5px;
+classDef database fill:#e6f7ff,stroke:#0080ff,stroke-width:1.5px;
+
+</div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+</body>
+</html>

@@ -62,6 +62,10 @@ def low_level():
 def mid_level():
     return render_template('mid_level.html')
 
+@app.route('/2026/modified_1')
+def modified_1():
+    return render_template('modified_1.html')
+
 @app.route('/2026/dvm')
 def dvm():
     return render_template('dvm.html')
