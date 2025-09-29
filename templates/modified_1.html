@@ -76,8 +76,8 @@ subgraph CE[C# Orchestrator]
 end
 
 subgraph VT[Voice & Transcription]
-  ELAB["ElevenLabs record voice"]:::process
-  T_EL["Transcript A (ElevenLabs)"]:::process
+  ELAB["Whisper record voice"]:::process
+  T_EL["Transcript A (Whisper)"]:::process
   T_ALT["Transcript B (Alt STT)"]:::process
   PY_DIFF["Python compare A vs B"]:::process
   DIFF{"Difference detected?"}:::decision
