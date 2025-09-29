@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>low_level Project</title>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden; /* fit diagram into viewport */
+    }
+
+    header {
+      text-align: center;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem; /* larger title */
+      color: #2c3e50;
+    }
+
+    #mermaidChart {
+      height: calc(100% - 60px); /* use all remaining screen height */
+      width: 100%;
+      background: #fff;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .mermaid {
+      width: 100%;
+      height: 100%;
+      font-size: 20px; /* enlarged diagram text */
+    }
+
+    #mermaidChart svg {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>low_level Project</h1>
+  </header>
+
+  <div id="mermaidChart">
+<div class="mermaid">
+    flowchart TD
+  %% ===== Inputs =====
+  INPUT["1. External Inputs<br>(Transcript, Assessments, Reports)"]
+  CE["2. Central Engine<br>(C# GateKeeper)"]
+  PY1["3. Python Service<br>(Structure & Draft Report)"]
+  PY2["4. Python Analysis<br>(Deterministic & Probabilistic Checks)"]
+  CL["5. Clinician Review<br>(Relevance & Approval)"]
+  DB["6. Final Database<br>(Approved Records)"]
+  SF["7. Salesforce<br>(Publish Patient Record)"]
+ 
+  %% ===== Flow =====
+  INPUT -->|"Unstructured Data"| CE
+  CE -->|"Send to AI/Python"| PY1
+  PY1 -->|"Structured Draft"| CE
+  CE -->|"Analysis Request"| PY2
+  PY2 -->|"Analysis Results"| CE
+  CE -->|"Draft for review"| CL
+  CL -->|"Approve / Request changes"| CE
+  CE -->|"Save Final Report"| DB
+  DB -->|"Sync Final Data"| SF
+ 
+  %% ===== Style =====
+  classDef process fill:#f0f9ff,stroke:#3b82f6,stroke-width:1px,rx:6,ry:6;
+  classDef system fill:#fff7ed,stroke:#f59e0b,stroke-width:1.5px,rx:8,ry:8;
+  class INPUT,CL,DB,SF process;
+  class CE,PY1,PY2 system;
+
+</div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+</body>
+</html>

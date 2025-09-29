@@ -50,6 +50,18 @@ def phase1_overview():
 def standalone():
     return render_template('standalone.html')
 
+@app.route('/2026/high_level')
+def high_level():
+    return render_template('high_level.html')
+
+@app.route('/2026/low_level')
+def low_level():
+    return render_template('low_level.html')
+
+@app.route('/2026/mid_level')
+def mid_level():
+    return render_template('mid_level.html')
+
 @app.route('/2026/dvm')
 def dvm():
     return render_template('dvm.html')

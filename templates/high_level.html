@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>high_level Project</title>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden; /* fit diagram into viewport */
+    }
+
+    header {
+      text-align: center;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem; /* larger title */
+      color: #2c3e50;
+    }
+
+    #mermaidChart {
+      height: calc(100% - 60px); /* use all remaining screen height */
+      width: 100%;
+      background: #fff;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .mermaid {
+      width: 100%;
+      height: 100%;
+      font-size: 20px; /* enlarged diagram text */
+    }
+
+    #mermaidChart svg {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>high_level Project</h1>
+  </header>
+
+  <div id="mermaidChart">
+<div class="mermaid">
+    flowchart LR
+
+%% ===== Lanes / Roles =====
+subgraph P[Parent or Guardian]
+  P1(("Conversation with AP")):::start
+  PUP["Upload additional info on request"]:::process
+end
+
+subgraph AP[Assistant Psychologist]
+  REC["Record session"]:::process
+  AP_QA{"Transcript OK"}:::decision
+  AP_NOTE["Add clinical notes and examples"]:::process
+end
+
+subgraph CE[Central Engine - CSharp Orchestrator]
+  CE1["Access control and validation"]:::process
+  CE2["Routing and audit trail"]:::process
+  CE3{"Compare Local vs Final DB"}:::decision
+end
+
+subgraph AI[ASR and LLM]
+  ASR["ASR speech to text - raw"]:::process
+  REF["Refine transcript LLM"]:::process
+  FIT["Fit to clinical data structure LLM"]:::process
+end
+
+subgraph D[Data Stores]
+  D1[(NoSQL - raw and refined transcripts)]:::database
+  D3[(Local DB - working copy)]:::database
+  D2[(Relational SQL - final approved copy)]:::database
+end
+
+subgraph QA[Quality and Gaps]
+  RB["Rule based checks"]:::process
+  GAP{"Gaps present"}:::decision
+  NOPH["No placeholder - unmappable concept"]:::process
+  NOVAL["No or empty value"]:::process
+  DASH["Missing fields dashboard - Care Manager"]:::process
+end
+
+subgraph CM[Care Manager]
+  CM_REVIEW["Review gaps and assign actions"]:::process
+  CM_FUP["Follow up with parent or AP"]:::process
+end
+
+subgraph CL[Clinician]
+  DRAFT["Draft structured report"]:::process
+  CL_REV["Clinical review of draft"]:::process
+  CL_SIG(("Final sign off")):::terminator
+end
+
+subgraph OUT[Delivery]
+  SR["Structured report - deterministic and probabilistic"]:::process
+  LHS["Likelihood and confidence for audit"]:::process
+  SF1["Sync to EHR or CRM"]:::process
+  CARE(("Care plan and follow on")):::terminator
+end
+
+%% ===== Main Flow with sequence numbers =====
+P1 -- "1" --> REC
+REC -- "2" --> CE1
+CE1 -- "3" --> CE2
+CE2 -- "4" --> ASR
+ASR -- "5 save raw" --> D1
+ASR -- "6" --> REF
+REF -- "7 save refined" --> D1
+D1 -- "8" --> AP_QA
+
+%% === Clarify loop: make 11 flow back into QA ===
+AP_QA -- "9 no - clarify" --> AP_NOTE
+AP_NOTE -- "10 request info" --> PUP
+PUP -- "11a submit additional info" --> CE1
+CE1 -- "11b route for ingest" --> CE2
+CE2 -- "11c attach/store update" --> D1
+D1 -- "11d re-check with new info" --> AP_QA
+
+%% === Happy path when QA passes ===
+AP_QA -- "12 yes (QA passed)" --> FIT
+
+FIT -- "13 store working copy" --> D3
+D3 -- "14" --> RB
+
+RB -- "15" --> GAP
+GAP -- "16 yes - no placeholder" --> NOPH
+GAP -- "17 yes - missing value" --> NOVAL
+NOPH -- "18" --> DASH
+NOVAL -- "19" --> DASH
+DASH -- "20" --> CM_REVIEW
+CM_REVIEW -- "21" --> CM_FUP
+CM_FUP -- "22" --> CE2
+CE2 -- "23" --> D3
+D3 -- "24 recheck" --> RB
+
+GAP -- "25 no" --> DRAFT
+DRAFT -- "26" --> CL_REV
+CL_REV -- "27" --> CL_SIG
+CL_SIG -- "28" --> CE3
+CE3 -- "29 different - update" --> D2
+CE3 -- "30 same - skip update" --> SR
+D2 -- "31 publish" --> SR
+
+SR -- "32" --> LHS
+SR -- "33" --> SF1
+SF1 -- "34" --> CARE
+
+%% ===== Cross-cutting audit trail =====
+CE2 -. "audit trail" .- RB
+CE2 -. "audit trail" .- CL_REV
+CE2 -. "audit trail" .- SF1
+
+%% ===== Styles =====
+classDef start fill:#b3ffb3,stroke:#2d862d,stroke-width:1.5px;
+classDef terminator fill:#ffe0b3,stroke:#e67300,stroke-width:1.5px;
+classDef process fill:#f0f7ff,stroke:#3366cc,stroke-width:1.2px;
+classDef decision fill:#fff3cd,stroke:#ff9933,stroke-width:1.5px;
+classDef database fill:#e6f7ff,stroke:#0080ff,stroke-width:1.5px;
+ 
+
+</div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+</body>
+</html>
