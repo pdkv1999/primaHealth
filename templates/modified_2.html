@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>modified_2 Project</title>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden; /* fit diagram into viewport */
+    }
+
+    header {
+      text-align: center;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem; /* larger title */
+      color: #2c3e50;
+    }
+
+    #mermaidChart {
+      height: calc(100% - 60px); /* use all remaining screen height */
+      width: 100%;
+      background: #fff;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .mermaid {
+      width: 100%;
+      height: 100%;
+      font-size: 20px; /* enlarged diagram text */
+    }
+
+    #mermaidChart svg {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>modified_2 Project</h1>
+  </header>
+
+  <div id="mermaidChart">
+<div class="mermaid">
+    flowchart LR
+  %% Lanes / Roles
+  subgraph P[Parent / Caller]
+    P1(("Start: Caller initiates")):::start
+  end
+
+  subgraph CE["C# Orchestrator (CE_GATE)"]
+    CE_REQ["CE: Create session"]:::process
+    CE_FUP["CE: Follow-up / recontact"]:::process
+  end
+
+  subgraph VAPI[Vapi / Voice Orchestrator]
+    VAPI_REC["Vapi: Start flow"]:::process
+    VAPI_PLAY["Vapi: Play prompts & record"]:::process
+    VAPI_UPLOAD["Vapi: Upload audio & callback"]:::process
+  end
+
+  subgraph REC["Recording & STT"]
+    ELAB["ASR_A: ElevenLabs STT"]:::process
+    ALT["ASR_B: Alt STT (Deepgram/Whisper)"]:::process
+  end
+
+  subgraph LLM["LLM Extraction"]
+    LLM_CALL["LLM: Call extractor"]:::process
+    LLM_JSON["LLM: Structured JSON + reconciled text"]:::process
+  end
+
+  subgraph DIFF["Diff & Decision (PY_DIFF)"]
+    PY_DIFF["PY_DIFF: similarity + confidence"]:::process
+    DIFF_DEC{"DIFF Decision: route human if thresholds fail or risk"}:::decision
+  end
+
+  subgraph ADM["ADM (Human Resolve)"]
+    ADM_QUEUE["Queue to ADM UI"]:::process
+    ADM_UI["ADM UI: edit / accept / escalate"]:::process
+    ADM_ACCEPT["ADM Accept → persist to D_RAW"]:::process
+  end
+
+  subgraph QA["QA / Admin 2"]
+    A2_CHECK["Admin2: completeness check"]:::process
+    A2_FUP["Admin2: follow-up → CE_FUP"]:::process
+  end
+
+  subgraph CLIN["Clinician"]
+    CL_DRAFT["Clinician: draft report"]:::process
+    CL_REV["Clinician: review & edit"]:::process
+    CL_SIGN(("Clinician: sign-off")):::terminator
+  end
+
+  subgraph DB["Datastores"]
+    D_RAW[(D_RAW: NoSQL raw artifacts)]:::database
+    D_WORK[(D_WORK: working copy)]:::database
+    D_FINAL[(D_FINAL: SQL approved copy)]:::database
+  end
+
+  subgraph SYNC["Delivery"]
+    SYNC_EHR["Sync to EHR/CRM (consent guard)"]:::process
+    CARE(("Care plan created / notified")):::terminator
+  end
+
+  %% Numbered flow arrows (story order)
+  P1 -- "1" --> CE_REQ
+  CE_REQ -- "2" --> VAPI_REC
+  VAPI_REC -- "3" --> VAPI_PLAY
+  VAPI_PLAY -- "4" --> VAPI_UPLOAD
+
+  VAPI_UPLOAD -- "5" --> ELAB
+  VAPI_UPLOAD -- "6" --> ALT
+  VAPI_UPLOAD -- "7" --> LLM_CALL
+
+  ELAB -- "8" --> LLM_CALL
+  ALT -- "9" --> LLM_CALL
+
+  LLM_CALL -- "10" --> LLM_JSON
+  LLM_JSON -- "11" --> D_RAW
+  LLM_JSON -- "12" --> PY_DIFF
+
+  PY_DIFF -- "13" --> DIFF_DEC
+  DIFF_DEC -- "14 (yes)" --> ADM_QUEUE
+  DIFF_DEC -- "15 (no)" --> ADM_ACCEPT
+
+  ADM_QUEUE -- "16" --> ADM_UI
+  ADM_UI -- "17: accept" --> ADM_ACCEPT
+  ADM_UI -- "18: escalate" --> CL_DRAFT
+
+  ADM_ACCEPT -- "19" --> D_WORK
+  D_WORK -- "20" --> A2_CHECK
+  A2_CHECK -- "21: gaps" --> A2_FUP
+  A2_CHECK -- "22: no gaps" --> CL_DRAFT
+
+  A2_FUP -- "23" --> CE_FUP
+  CE_FUP -- "24" --> P1
+  P1 -- "25" --> VAPI_UPLOAD
+  VAPI_UPLOAD -- "26" --> ELAB
+  VAPI_UPLOAD -- "27" --> ALT
+  ELAB -- "28" --> LLM_CALL
+  ALT -- "29" --> LLM_CALL
+
+  CL_DRAFT -- "30" --> CL_REV
+  CL_REV -- "31" --> CL_SIGN
+  CL_SIGN -- "32" --> D_FINAL
+  D_FINAL -- "33" --> SYNC_EHR
+  SYNC_EHR -- "34" --> CARE
+
+  %% Error handling paths
+  LLM_JSON -- "35: invalid JSON" --> ADM_QUEUE
+  ELAB -- "36: ASR retry" --> VAPI_UPLOAD
+  ALT -- "37: ASR retry" --> VAPI_UPLOAD
+
+  %% Styles
+  classDef start fill:#b3ffb3,stroke:#2d862d,stroke-width:1.2px;
+  classDef terminator fill:#ffe0b3,stroke:#e67300,stroke-width:1.2px;
+  classDef process fill:#f6fbff,stroke:#1f6feb,stroke-width:1px;
+  classDef decision fill:#fff4e6,stroke:#ff8c1a,stroke-width:1px;
+  classDef database fill:#eaf8ff,stroke:#0077cc,stroke-width:1px;
+
+</div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+</body>
+</html>
