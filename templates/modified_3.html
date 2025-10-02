@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>modified_3 Project</title>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #f4f6f8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden; /* fit diagram into viewport */
+    }
+
+    header {
+      text-align: center;
+      padding: 14px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem; /* larger title */
+      color: #2c3e50;
+    }
+
+    #mermaidChart {
+      height: calc(100% - 60px); /* use all remaining screen height */
+      width: 100%;
+      background: #fff;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .mermaid {
+      width: 100%;
+      height: 100%;
+      font-size: 20px; /* enlarged diagram text */
+    }
+
+    #mermaidChart svg {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>modified_3 Project</h1>
+  </header>
+
+  <div id="mermaidChart">
+<div class="mermaid">
+    flowchart LR
+    %% ElevenLabs for TTS + ASR, C# central, AWS DBs, plain + JSON transcripts saved
+  
+    subgraph P["Parent / Caller"]
+      P1(("Start: Caller initiates")):::start
+    end
+  
+    subgraph CE["C# Central Engine (CE_GATE)"]
+      CE_REQ["CE: Create session & control"]:::process
+      CE_FUP["CE: Schedule follow-up (if needed)"]:::process
+    end
+  
+    subgraph VAPI["Vapi (ElevenLabs for Voice)"]
+      VAPI_PLAY["Vapi: Play prompts (TTS)"]:::process
+      VAPI_REC["Vapi: Record audio & callback to CE"]:::process
+    end
+  
+    subgraph EL["ElevenLabs Speech Services"]
+      EL_TTS_ASR["ElevenLabs: TTS + ASR (play + transcribe)"]:::process
+    end
+  
+    subgraph LLM["GPT-5 Extractor"]
+      GPT5["GPT-5: normalize + extract structured JSON"]:::process
+    end
+  
+    subgraph VALID["Validate & Work"]
+      SCHEMA["Schema Mapper & Validator"]:::process
+      D_WORK[(D_WORK: AWS DocumentDB / Mongo)]:::database
+    end
+  
+    subgraph DIFF["Quality & Review"]
+      PY_DIFF["PY_DIFF: similarity & confidence check"]:::process
+      ADM_UI["ADM UI: review raw artefacts if needed"]:::process
+      ADMIN2["Admin2: completeness check"]:::process
+    end
+  
+    subgraph AWS["AWS Datastores"]
+      D_RAW[(D_RAW: S3 / DynamoDB — audio + plain transcript + JSON)]:::database
+      D_FINAL[(D_FINAL: RDS — final clinical record)]:::database
+    end
+  
+    subgraph CLIN["Clinician"]
+      CLIN_D["Clinician: draft, review & sign-off"]:::process
+    end
+  
+    subgraph SYNC["Sync"]
+      SYNC_EHR["Sync to EHR/CRM (consent guard)"]:::process
+      CARE(("Care plan created / notified")):::terminator
+    end
+  
+    %% Numbered flow
+    P1 -- "1" --> CE_REQ
+    CE_REQ -- "2" --> VAPI_PLAY
+    VAPI_PLAY -- "3" --> VAPI_REC
+    VAPI_REC -- "4" --> CE_REQ
+    CE_REQ -- "5: save raw audio" --> D_RAW
+    CE_REQ -- "6" --> EL_TTS_ASR
+    EL_TTS_ASR -- "7: plain transcript" --> CE_REQ
+    CE_REQ -- "8: save plain transcript" --> D_RAW
+    CE_REQ -- "9" --> GPT5
+    GPT5 -- "10: transcript JSON" --> CE_REQ
+    CE_REQ -- "11: save transcript JSON" --> D_RAW
+    CE_REQ -- "12" --> SCHEMA
+    SCHEMA -- "13 (valid)" --> D_WORK
+    D_WORK -- "14" --> PY_DIFF
+    PY_DIFF -- "15 (low/conflict)" --> ADM_UI
+    PY_DIFF -- "16 (ok)" --> ADMIN2
+    ADM_UI -- "17: review raw artefacts" --> D_RAW
+    ADM_UI -- "18: approve/update" --> D_WORK
+    ADMIN2 -- "19 (gaps)" --> CE_FUP
+    ADMIN2 -- "20 (complete)" --> CLIN_D
+    CE_FUP -- "21 (recontact → loop to 2)" --> VAPI_PLAY
+    CLIN_D -- "22" --> D_FINAL
+    D_FINAL -- "23" --> SYNC_EHR
+    SYNC_EHR -- "24" --> CARE
+  
+    %% Styles
+    classDef start fill:#b3ffb3,stroke:#2d862d,stroke-width:1.2px;
+    classDef process fill:#f6fbff,stroke:#1f6feb,stroke-width:1px;
+    classDef database fill:#eef9ff,stroke:#0077cc,stroke-width:1px;
+    classDef terminator fill:#ffe0b3,stroke:#e67300,stroke-width:1.2px;
+  
+</div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+</body>
+</html>

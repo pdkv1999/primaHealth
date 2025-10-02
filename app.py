@@ -70,6 +70,10 @@ def modified_1():
 def modified_2():
     return render_template('modified_2.html')
 
+@app.route('/2026/modified_3')
+def modified_3():
+    return render_template('modified_3.html')
+
 @app.route('/2026/dvm')
 def dvm():
     return render_template('dvm.html')
